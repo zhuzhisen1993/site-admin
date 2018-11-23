@@ -17,10 +17,18 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $user = User::query()->with('roles');
-        $users = $user->paginate();
-        return view('admin.users.index',compact('users'));
+//        $user = User::query()->with('roles');
+//        $users = $user->paginate();
+//        return view('admin.users.index',compact('users'));
+        return view('admin.users.index');
     }
+
+    public function getData(){
+        $data['user'] = User::all();
+        $data['role'] = Role::all();
+        return json_encode($data);
+    }
+
 
     public function create(User $user){
         $roles = Role::all();
