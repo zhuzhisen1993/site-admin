@@ -26,6 +26,7 @@ class UserController extends Controller
     public function getData(){
         $data['user'] = User::all();
         $data['role'] = Role::all();
+        return json_encode($data);
     }
 
 
