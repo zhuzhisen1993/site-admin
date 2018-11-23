@@ -79,6 +79,77 @@
         </div>
 
 
+                <template>
+                <el-table
+                    :data="tableData.slice((currpage - 1) * pagesize, currpage * pagesize)"
+                    style="width: 100%" border>
+                    <el-table-column
+                    label="序号"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span >@{{ scope.row.date }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="用户名称"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span>@{{ scope.row.date }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="角色"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span >@{{ scope.row.date }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="创建时间"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span >@{{ scope.row.date }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="更新时间"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span>@{{ scope.row.date }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                    <template slot-scope="scope">
+                    <el-button
+                        size="mini"
+                        type="mini"
+                        @click="openSavePasswordFrom(scope.$index, scope.row.id)">重置密码</el-button>
+                        <el-button
+                        size="mini"
+                        @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button
+                        size="mini"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                    </el-table-column>
+                </el-table>
+                </template>
+
+      <div style="text-align: center;padding:10px 0px;">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="currpage"
+                                :page-sizes="[2, 3, 4, 5]"
+                                :page-size="pagesize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="tableData.length">
+                        </el-pagination>
+                    </div>
+
+
+
         <!-- Form -->
         <el-dialog title="修改密码" :visible.sync="dialogFormVisible"   width="30%">
             <el-form :model="form" ref="numberValidateForm">
@@ -106,8 +177,16 @@
     <script>
         new Vue({
             el: '#apps',
+            delimiters: ['@{{', '}}'],
             data() {
                 return {
+                    pagesize: 2,
+                    currpage: 1,
+                    tableData: [
+                    {id:1,date: '2016-05-02',},
+                     {id:2,date: '2016-05-02',},
+                     {id:4,date: '2016-05-02',},
+                     {id:3,date: '2016-05-02',}],
                     dialogTableVisible: false,
                     dialogFormVisible: false,
                     rules:[
@@ -162,6 +241,41 @@
                                 return false;
                             }
                         });
+
+                },
+                handleCurrentChange(cpage) {
+                    this.currpage = cpage;
+                },
+                handleSizeChange(psize) {
+                    this.pagesize = psize;
+                },
+                handleEdit(index, row) {
+                    console.log(index, row);
+                    
+                },
+                handleDelete(index, row) {
+                    let that = this
+                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        console.log(index, row);
+                        that.tableData=that.tableData.filter(function(item){   
+                        return item.id!==row.id  
+                    });
+
+                        that.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                    });
+                    }).catch(() => {
+                        that.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });          
+                    
+                    })
 
                 }
             }
