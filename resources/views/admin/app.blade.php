@@ -173,7 +173,7 @@
                         <li><a href="{{url('/admin/profile')}}"><i class="fa fa-circle-o"></i>管理员</a></li>
                         <li><a href="{{url('/admin/users')}}"><i class="fa fa-circle-o"></i>用户管理</a></li>
                         <li><a href="{{url('admin/roles')}}"><i class="fa fa-circle-o"></i>角色管理</a></li>
-                        <li><a href="#"><i class="fa fa-circle-o"></i>用户权限</a></li>
+                        <li><a href="{{url('admin/permission')}}"><i class="fa fa-circle-o"></i>权限管理</a></li>
                     </ul>
                 </li>
 
