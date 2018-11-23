@@ -23,7 +23,6 @@ class PermissionController extends Controller
         $data=$request->input('data');
         $msg = '';
 
-
         if($data['id']){
             $permission = Permission::where('id',$data['id'])->first();
             Permission::where('id',$data['id'])->update([

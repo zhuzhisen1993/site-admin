@@ -15,16 +15,10 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
     Route::group(['middleware' => ['auth.admin','permission']], function () {
         Route::get('/', 'AdminController@index'); //后台首页
 
-        route::resource('users','UserController',['only' => ['index', 'create', 'store', 'update', 'edit', 'destroy'],'names' =>[
-            'create' => 'admin.users.create',
-            'index'=>'admin.users.index'
-        ]]);
-
 
         //用户管理
         route::get('users','UserController@index');
         route::get('users/getData','UserController@getData');
-
 
         //角色管理
         route::get('roles','RoleController@index');

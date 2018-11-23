@@ -24,7 +24,6 @@ class UserController extends Controller
     }
 
     public function getData(){
-        
         $data['roles'] = Role::all();
         $user = User::with('roles')->get();
         $user->each(function($item){
@@ -34,6 +33,36 @@ class UserController extends Controller
 
         return json_encode($data);
     }
+
+    public function add(Request $request){
+        $data=$request->input('data');
+        $msg = '';
+
+        if($data['id']){
+
+        }else{
+            $returndData= array();
+            //添加操作
+            DB::transaction(function () use ($request,$data){
+                $roles = $request->input('roles');
+                if($roles){
+                    $user = User::insert([
+                           'name' => $request->input('username'),
+                          'password' => bcrypt($request->input('password'))
+                    ]);
+                    foreach ($roles as $val){
+                        DB::table('admin_role')->insert([
+                            'admin_id'=>$user->id,
+                            'role_id'=>$val
+                        ]);
+                    }
+                }
+            });
+        }
+
+    }
+
+
 
 
     public function store(Request $request,User $user){
@@ -63,18 +92,6 @@ class UserController extends Controller
                 return redirect()->route('admin.users.index');
             }
         }
-    }
-
-    public function edit(User $user){
-        $roles = Role::all();
-
-        //array_flatten将多为数组转换成一维数组
-        $roleId = array_flatten(array_values(AdminRole::where('admin_id',$user->id)->select('role_id')->get()->toArray()));
-        return view('admin.users.create',[
-            'roles'=>$roles,
-            'user'=>$user,
-            'roleId'=>$roleId
-        ]);
     }
 
     public function update(User $user,Request $request){
