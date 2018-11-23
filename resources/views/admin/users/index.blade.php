@@ -30,54 +30,90 @@
             </div>
         </div>
         <div class="box-body table-responsive">
-            <table class="table table-hover table-bordered">
-                <tbody>
-                <!--tr-th start-->
-                <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>用户名称</th>
-                    <th>角色</th>
-                    <th>创建时间</th>
-                    <th>更新时间</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <!--tr-th end-->
+            
+            <template>
+                <el-table
+                    :data="tableData.slice((currpage - 1) * pagesize, currpage * pagesize)"
+                    style="width: 100%" border>
+                    <el-table-column
+                    label="序号"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span >@{{ scope.row.id }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="用户名称"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span>@{{ scope.row.name }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="角色"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span >@{{ scope.row.date }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="创建时间"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span >@{{ scope.row.created_at }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column
+                    label="更新时间"
+                    width="180">
+                    <template slot-scope="scope">
+                        <span>@{{ scope.row.updated_at }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                    <template slot-scope="scope">
+                    <el-button
+                        size="mini"
+                        type="mini"
+                        @click="openSavePasswordFrom(scope.$index, scope.row.id)">重置密码</el-button>
+                        <el-button
+                        size="mini"
+                        @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button
+                        size="mini"
+                        type="danger"
+                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                    </el-table-column>
+                </el-table>
+                </template>
 
-                <tbody>
-                @foreach($users as $val)
-                        <tr>
-                            <td>{{$val->id}}</td>
-                            <td class="text-muted">{{$val->name}}</td>
-                            <td class="text-muted">
-                                @foreach($val->roles as $role)
-                                    {{$role->title}}
-                                @endforeach
-                            </td>
-                            <td class="text-navy">{{$val->created_at}}</td>
-                            <td class="text-navy">{{$val->updated_at}}</td>
-                            <td>
+      <div style="text-align: center;padding:10px 0px;">
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="currpage"
+                                :page-sizes="[2, 3, 4, 5]"
+                                :page-size="pagesize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="tableData.length">
+                        </el-pagination>
+                    </div>
 
-                                <a class="btn btn-xs btn-warning" @click="openSavePasswordFrom({{$val->id}})">重置密码</a>
-                                <a href="{{url('admin/users/'.$val->id.'/edit')}}" class="btn btn-xs btn-primary">编辑</a>
-                                <a href="javascript:;" data-url="http://laracms.test/administrator/users/1" class="btn btn-xs btn-danger form-delete">删除</a>
 
-                                {{--<a style="font-size: 16px" href="{{url('admin/users/'.$val->id.'/edit')}}"><i class="fa fa-fw fa-pencil" title="修改"></i></a>--}}
-                                {{--<form style="display: inline-block;" action="{{url('admin/users/'.$val->id)}}" method="POST" id="del-user-{{$val->id}}">--}}
-                                    {{--{{ csrf_field() }}--}}
-                                    {{--{{ method_field('DELETE') }}--}}
-                                    {{--<a style="font-size: 16px;color: #dd4b39;"><i class="fa fa-fw fa-trash-o" title="删除" onclick="document.getElementById('del-user-{{$val->id}}').submit();"></i></a>--}}
-                                {{--</form>--}}
-
-                            </td>
-                        </tr>
-                @endforeach
-                </tbody>
-            </table>
-            {{ $users->links() }}
-        </div>
-
+            <el-dialog title="更改" :visible.sync="dialogTableVisible">
+        <template>
+        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+        <div style="margin: 15px 0;"></div>
+        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="city in cities" :label="city" :key="city">@{{city}}</el-checkbox>
+        </el-checkbox-group>
+        </template>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogTableVisible = false">取 消</el-button>
+                <el-button type="primary" @click="eite()">确 定</el-button>
+            </div>
+            </el-dialog>
 
         <!-- Form -->
         <el-dialog title="修改密码" :visible.sync="dialogFormVisible"   width="30%">
@@ -97,6 +133,10 @@
                 <el-button type="primary" @click="savePassword('numberValidateForm')">确 定</el-button>
             </div>
         </el-dialog>
+
+
+
+        </div>
     </div>
 
 
@@ -104,10 +144,17 @@
 
 
     <script>
+
+    const cityOptions = ['上海', '北京', '广州', '深圳'];
         new Vue({
             el: '#apps',
+            delimiters: ['@{{', '}}'],
             data() {
                 return {
+                    gridData: [],
+                    pagesize: 2,
+                    currpage: 1,
+                    tableData: [],
                     dialogTableVisible: false,
                     dialogFormVisible: false,
                     rules:[
@@ -128,10 +175,26 @@
                         password: '',
                         password1: '',
                     },
-                    formLabelWidth: '120px'
+                    formLabelWidth: '120px',
+                    checkAll: false,
+                checkedCities: ['上海', '北京'],
+                cities: cityOptions,
+                isIndeterminate: true
                 };
             },
             methods:{
+
+                getdate(){
+                    let that = this
+                    axios.get("/admin/users/getData").then(function (res) {
+                        that.tableData=res.data.users
+                    })
+                },
+                eite(){
+                console.log(this.checkedCities)
+                    console.log(0)
+                },
+
                 openSavePasswordFrom:function(userId){
                     this.form.id = userId;
                     this.dialogFormVisible = true
@@ -163,8 +226,58 @@
                             }
                         });
 
-                }
-            }
+                },
+                handleCurrentChange(cpage) {
+                    this.currpage = cpage;
+                },
+                handleSizeChange(psize) {
+                    this.pagesize = psize;
+                },
+                handleEdit(index, row) {
+                    this.dialogTableVisible = true
+                    console.log(index, row);                    
+                },
+                handleCheckAllChange(val) {
+                    this.checkedCities = val ? cityOptions : [];
+                    this.isIndeterminate = false;
+                },
+                handleCheckedCitiesChange(value) {
+                    let checkedCount = value.length;
+                    this.checkAll = checkedCount === this.cities.length;
+                    this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+                },
+                handleDelete(index, row) {
+                    let that = this
+                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        console.log(index, row);
+                        that.tableData=that.tableData.filter(function(item){   
+                        return item.id!==row.id  
+                    });
+
+                        that.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                    });
+                    }).catch(() => {
+                        that.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });          
+                    
+                    })
+
+                },
+                
+
+            },
+            created() {
+                this.getdate()
+                 },
+           
         })
     </script>
 
