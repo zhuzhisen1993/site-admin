@@ -24,16 +24,17 @@ class UserController extends Controller
     }
 
     public function getData(){
-        $data['user'] = User::all();
-        $data['role'] = Role::all();
+        
+        $data['roles'] = Role::all();
+        $user = User::with('roles')->get();
+        $user->each(function($item){
+            $item->roles_ids = $item->roles->pluck('id');
+        });
+        $data['users'] = $user;
+
         return json_encode($data);
     }
 
-
-    public function create(User $user){
-        $roles = Role::all();
-        return view('admin.users.create',['user'=>$user,'roles'=>$roles]);
-    }
 
     public function store(Request $request,User $user){
         if(empty($request->input('username'))){
