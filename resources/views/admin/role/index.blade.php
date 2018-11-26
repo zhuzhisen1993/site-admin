@@ -20,7 +20,7 @@
                     <div class="box-tools">
                         <form action="" method="get">
                             <div class="input-group">
-                                <input type="text" class="form-control input-sm pull-right" name="s_title"
+                                <input v-model="search" type="text" class="form-control input-sm pull-right" name="s_title"
                                        style="width: 150px;" placeholder="搜索角色标题">
                                 <div class="input-group-btn">
                                     <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>

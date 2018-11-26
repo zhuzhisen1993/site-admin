@@ -20,7 +20,7 @@
                 <div class="box-tools">
                     <form action="" method="get">
                         <div class="input-group">
-                            <input type="text" class="form-control input-sm pull-right" name="s_title"
+                            <input   v-model="search" type="text" class="form-control input-sm pull-right" name="s_title"
                                    style="width: 150px;" placeholder="搜索权限标题">
                             <div class="input-group-btn">
                                 <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
@@ -61,12 +61,6 @@
                     </el-table-column>
                     <el-table-column
                             align="right">
-                        <template slot="header" slot-scope="scope">
-                            <el-input
-                                    v-model="search"
-                                    size="mini"
-                                    placeholder="输入关键字搜索"/>
-                        </template>
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
