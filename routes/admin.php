@@ -21,7 +21,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::get('users/getData','UserController@getData');
         route::post('users/add','UserController@add');
         route::post('users/{user}/status','UserController@status');
-        route::get('users/{user}/status','UserController@status');
 
         //角色管理
         route::get('roles','RoleController@index');
@@ -35,7 +34,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('permisssion/add','PermissionController@add');
         route::get('permission/{permission}/edit','PermissionController@edit');
         route::post('permission/{permission}/destroy','PermissionController@destroy');
-
 
 
         Route::get('profile','AdminController@adminInfo');//管理员资料

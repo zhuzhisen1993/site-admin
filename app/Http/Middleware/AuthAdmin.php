@@ -23,6 +23,10 @@ class AuthAdmin
                   return redirect()->guest('admin/login');
             }
         }
+        $user = auth()->guard('admin');
+        if(empty($user->status)){
+            //return redirect()->guest('admin/login');
+        }
         return $next($request);
     }
 }

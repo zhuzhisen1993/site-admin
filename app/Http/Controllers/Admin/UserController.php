@@ -55,7 +55,6 @@ class UserController extends Controller
             }
 
         }else{
-
             //添加操作
             DB::transaction(function () use ($data,$roles){
                 if($roles){
@@ -69,9 +68,10 @@ class UserController extends Controller
                     }
 
                     \App\Models\admin\AdminRole::insert($arr);
-
+                    return $this->response($users,'success','添加成功！');
+                }else{
+                    return $this->response([],'error','用户角色不能为空！');
                 }
-                return $this->response($users,'success','添加成功');
             });
         }
 
