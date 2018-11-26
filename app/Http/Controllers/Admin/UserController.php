@@ -63,7 +63,6 @@ class UserController extends Controller
                         'name'=>$data['username'],
                         'password'=>bcrypt($data['password'])
                     ]);
-
                     foreach ($roles as $key =>$val){
                             $arr[$key]['admin_id'] = $users->id;
                             $arr[$key]['role_id'] = $val;
@@ -77,7 +76,6 @@ class UserController extends Controller
         }
 
     }
-
 
     public function resetPassword(Request $request){
         $userId = $request->input('data.id');
@@ -93,6 +91,18 @@ class UserController extends Controller
         }
         return json_encode($msg);
 
+    }
+
+    public function status(User $user){
+        if($user->status){
+            $tips = '禁用成功！';
+            $status = 0;
+        }else{
+            $tips = '启动成功';
+            $status = 1;
+        }
+        $user->where('id',$user->id)->update(['status'=>$status]);
+        return $this->response([],'success',$tips);
     }
 
 
