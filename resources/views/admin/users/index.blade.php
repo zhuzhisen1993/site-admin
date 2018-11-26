@@ -13,7 +13,7 @@
 
 @section('content')
     <div id="apps">
-    <a href="{{url('admin/users/create')}}" class="btn btn-primary margin-bottom"><i class="fa fa-paint-brush" style="margin-right: 6px"></i>新增用户</a>
+    <span href="#" @click="editPasswordFrom('')" class="btn btn-primary margin-bottom"><i class="fa fa-paint-brush" style="margin-right: 6px"></i>新增用户</span>
     <div class="box box-primary">
         <div class="box-header with-border">
             <h3 class="box-title">用户列表</h3>
@@ -87,26 +87,23 @@
                     </el-table-column>
                 </el-table>
                 </template>
-
       <div style="text-align: center;padding:10px 0px;">
-                        <el-pagination
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                :current-page="currpage"
-                                :page-sizes="[2, 3, 4, 5]"
-                                :page-size="pagesize"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="tableData.length">
-                        </el-pagination>
-                    </div>
-
-
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currpage"
+                    :page-sizes="[20, 30, 40, 50]"
+                    :page-size="pagesize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="tableData.length">
+            </el-pagination>
+        </div>
             <el-dialog title="更改" :visible.sync="dialogTableVisible">
         <template>
         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
         <div style="margin: 15px 0;"></div>
         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-            <el-checkbox v-for="city in cities" :label="city" :key="city">@{{city}}</el-checkbox>
+            <el-checkbox v-for="city,i in cities" :label="city.id" :key="i">@{{city.title}}</el-checkbox>
         </el-checkbox-group>
         </template>
             <div slot="footer" class="dialog-footer">
@@ -116,9 +113,16 @@
             </el-dialog>
 
         <!-- Form -->
-        <el-dialog title="修改密码" :visible.sync="dialogFormVisible"   width="30%">
+        <el-dialog   title="修改密码" :visible.sync="dialogFormVisible"   width="30%">
             <el-form :model="form" ref="numberValidateForm">
-                <el-input type="hidden" v-model="form.id" autocomplete="off"></el-input>
+                <el-input type="hidden" v-model="form.id"></el-input>
+                <el-form-item v-if="editmune" label="用户名" :label-width="formLabelWidth"  prop="name"
+                              :rules=" {
+                            required: true,
+                            message: '用户名不能为空！'
+                        }" >
+                    <el-input type="name" v-model="form.name" ></el-input>
+                </el-form-item>
                 <el-form-item label="密码" :label-width="formLabelWidth"  prop="password"
                               :rules="rules" >
                     <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
@@ -127,9 +131,16 @@
                               :rules="rules">
                     <el-input type="password" v-model="form.password1" autocomplete="off"></el-input>
                 </el-form-item>
+        <template v-if="editmune">
+        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+        <div style="margin: 15px 0;"></div>
+        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="city,i in cities" :label="city.id" :key="i">@{{city.title}}</el-checkbox>
+        </el-checkbox-group>
+        </template>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="dialogFormVisible=false;">取 消</el-button>
                 <el-button type="primary" @click="savePassword('numberValidateForm')">确 定</el-button>
             </div>
         </el-dialog>
@@ -144,8 +155,6 @@
 
 
     <script>
-
-    const cityOptions = ['上海', '北京', '广州', '深圳'];
         new Vue({
             el: '#apps',
             delimiters: ['@{{', '}}'],
@@ -174,13 +183,23 @@
                         id:'',
                         password: '',
                         password1: '',
+                        name:""
                     },
                     formLabelWidth: '120px',
                     checkAll: false,
-                checkedCities: ['上海', '北京'],
-                cities: cityOptions,
-                isIndeterminate: true
+                    checkedCities: [],
+                    cities: [],
+                    isIndeterminate: true,
+                    id:[],
+                    editmune:false
                 };
+            },
+            watch:{
+                dialogFormVisible(val){
+                    if(this.$refs['numberValidateForm']){
+                    this.$refs['numberValidateForm'].resetFields();
+                }
+                }
             },
             methods:{
 
@@ -188,16 +207,32 @@
                     let that = this
                     axios.get("/admin/users/getData").then(function (res) {
                         that.tableData=res.data.users
+                        res.data.roles.map(item=>{
+                            that.cities.push(item)
+                            that.id.push(item.id)
+                        })
+                      //  console.log(that.cities)
                     })
                 },
                 eite(){
-                console.log(this.checkedCities)
-                    console.log(0)
+                    if(this.checkedCities.length==0){
+                            this.$message.error('权限不能为空！');
+                             this.editmune=true
+                     return
+                    }
+                    console.log(this.checkedCities)
                 },
-
-                openSavePasswordFrom:function(userId){
-                    this.form.id = userId;
+                editPasswordFrom(){
                     this.dialogFormVisible = true
+                    this.editmune=true
+                },
+                openSavePasswordFrom:function(userId){
+                    if(userId){
+                        this.form.id = userId;
+
+                    }
+                    this.dialogFormVisible = true
+                    this.editmune=false
                 },
                 savePassword:function(formName){
                         var that = this;
@@ -205,8 +240,10 @@
                             if (valid) {
                                 if(this.form.password !== this.form.password1){
                                      this.$message.error('两次密码不一致，请从新输入！');
+                                     return
                                 }
-                                let data = this.from
+                                if(this.editmune=false){
+                                    let data = this.from
                                 axios.post("/admin/reset/password",{
                                     data:this.form
                                 }).then(function (res) {
@@ -220,12 +257,20 @@
                                         that.$message.error(res.data);
                                     }
                                 })
+                            }else{
+                                if(this.checkedCities.length==0){
+                                    this.$message.error('权限不能为空！');
+                                     return
+                                }
+                                this.editmune=true
+                                console.log(this.form)
+                                console.log(this.checkedCities)
+                            }
                             } else {
                                 console.log('error submit!!');
                                 return false;
                             }
                         });
-
                 },
                 handleCurrentChange(cpage) {
                     this.currpage = cpage;
@@ -235,10 +280,16 @@
                 },
                 handleEdit(index, row) {
                     this.dialogTableVisible = true
-                    console.log(index, row);                    
+                   // console.log(index, row);     
+                    this.tableData.map(item=>{
+                       if(item.id=row.id){
+                          // console.log(item)
+                           this.checkedCities=item.roles
+                       }
+                    })
                 },
                 handleCheckAllChange(val) {
-                    this.checkedCities = val ? cityOptions : [];
+                    this.checkedCities = val ? this.id : [];
                     this.isIndeterminate = false;
                 },
                 handleCheckedCitiesChange(value) {
@@ -253,7 +304,7 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        console.log(index, row);
+                       // console.log(index, row);
                         that.tableData=that.tableData.filter(function(item){   
                         return item.id!==row.id  
                     });
@@ -271,8 +322,6 @@
                     })
 
                 },
-                
-
             },
             created() {
                 this.getdate()
