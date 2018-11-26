@@ -223,7 +223,7 @@
                             that.cities.push(item)
                             that.id.push(item.id)
                         })
-                      //  console.log(that.cities)
+                      //console.log(that.cities)
                     })
                 },
                 eite(){
