@@ -8,7 +8,7 @@ use App\Models\admin\Role;
 class User extends Model
 {
      protected $fillable = [
-         'name'
+         'name','password'
      ];
 
      protected $table = 'admins';

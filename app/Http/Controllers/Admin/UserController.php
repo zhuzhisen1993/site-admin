@@ -35,28 +35,43 @@ class UserController extends Controller
     }
 
     public function add(Request $request){
+
         $data=$request->input('data');
-        $msg = '';
+        $roles = $request->input('roles');
 
         if($data['id']){
+            //修改操作
+            if($roles){
+                DB::transaction(function () use($data,$roles){
+                    \App\Models\admin\AdminRole::where('admin_id',$data['id'])->delete();
+                    foreach ($roles as $key =>$val){
+                        $arr[$key]['admin_id'] = $data['id'];
+                        $arr[$key]['role_id'] = $val;
+                    }
+                    \App\Models\admin\AdminRole::insert($arr);
+
+                    return $this->response($roles,'success','修改成功！');
+                });
+            }
 
         }else{
-            $returndData= array();
+
             //添加操作
-            DB::transaction(function () use ($request,$data){
-                $roles = $request->input('roles');
+            DB::transaction(function () use ($data,$roles){
                 if($roles){
-                    $user = User::insert([
-                           'name' => $request->input('username'),
-                          'password' => bcrypt($request->input('password'))
+                    $users = \App\Models\admin\User::create([
+                        'name'=>$data['username'],
+                        'password'=>bcrypt($data['password'])
                     ]);
+
                     foreach ($roles as $val){
                         DB::table('admin_role')->insert([
-                            'admin_id'=>$user->id,
+                            'admin_id'=>$users->id,
                             'role_id'=>$val
                         ]);
                     }
                 }
+                return $this->response($users,'success','添加成功');
             });
         }
 
