@@ -20,8 +20,7 @@
             <div class="box-tools">
                 <form action="" method="get">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm pull-right" name="s_title"
-                               style="width: 150px;" placeholder="搜索用户标题">
+                        <input type="text" class="form-control input-sm pull-right"  v-model="search" name="s_title"      style="width: 150px;" placeholder="搜索用户标题">
                         <div class="input-group-btn">
                             <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
                         </div>
@@ -33,8 +32,8 @@
             
             <template>
                 <el-table
-                    :data="tableData.slice((currpage - 1) * pagesize, currpage * pagesize)"
-                    style="width: 100%" border>
+                    :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)"
+                    style="width: 100% ; text-align: center;"  border>
                     <el-table-column
                     label="序号"
                     width="180">
@@ -53,24 +52,24 @@
                     label="角色"
                     width="180">
                     <template slot-scope="scope">
-                        <span >@{{ scope.row.date }}</span>
+                        <span v-for="(item, index) in scope.row.roles" :key="index">--@{{item.title}}</span>
                     </template>
                     </el-table-column>
                     <el-table-column
                     label="创建时间"
-                    width="180">
+                    >
                     <template slot-scope="scope">
                         <span >@{{ scope.row.created_at }}</span>
                     </template>
                     </el-table-column>
                     <el-table-column
                     label="更新时间"
-                    width="180">
+                    >
                     <template slot-scope="scope">
                         <span>@{{ scope.row.updated_at }}</span>
                     </template>
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column label="操作"  width="400">
                     <template slot-scope="scope">
                     <el-button
                         size="mini"
@@ -79,10 +78,18 @@
                         <el-button
                         size="mini"
                         @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button
-                        size="mini"
-                        type="danger"
-                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-tooltip :content="'Switch value: ' + scope.row.status" placement="top">
+                        <el-switch
+                        @change="handleDelete(scope.$index, scope.row)"
+                            v-model="scope.row.status + ''"  
+                            active-color="#13ce66"
+                            inactive-color="#ff4949"
+                            active-value="1"
+                            inactive-value="0"
+                            active-text="启用"
+                            inactive-text="禁用">
+                        </el-switch>
+                        </el-tooltip>
                     </template>
                     </el-table-column>
                 </el-table>
@@ -115,20 +122,16 @@
         <!-- Form -->
         <el-dialog   title="修改密码" :visible.sync="dialogFormVisible"   width="30%">
             <el-form :model="form" ref="numberValidateForm">
-                <el-input type="hidden" v-model="form.id"></el-input>
-                <el-form-item v-if="editmune" label="用户名" :label-width="formLabelWidth"  prop="name"
-                              :rules=" {
-                            required: true,
-                            message: '用户名不能为空！'
-                        }" >
-                    <el-input type="name" v-model="form.name" ></el-input>
+                <el-form-item v-if="editmune" label="用户名" :label-width="formLabelWidth"  prop="username"
+                              :rules=" rules.title" >
+                    <el-input type="text" v-model="form.username" ></el-input>
                 </el-form-item>
                 <el-form-item label="密码" :label-width="formLabelWidth"  prop="password"
-                              :rules="rules" >
+                              :rules="rules.rules" >
                     <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" :label-width="formLabelWidth" prop="password1"
-                              :rules="rules">
+                              :rules="rules.rules">
                     <el-input type="password" v-model="form.password1" autocomplete="off"></el-input>
                 </el-form-item>
         <template v-if="editmune">
@@ -156,17 +159,20 @@
 
     <script>
         new Vue({
+
             el: '#apps',
             delimiters: ['@{{', '}}'],
             data() {
                 return {
+                    search:"",
                     gridData: [],
-                    pagesize: 2,
+                    pagesize: 20,
                     currpage: 1,
                     tableData: [],
                     dialogTableVisible: false,
                     dialogFormVisible: false,
-                    rules:[
+                    rules: {
+                        rules:[
                         {
                             required: true,
                             message: '密码不能为空！'
@@ -179,11 +185,17 @@
                         }
 
                     ],
+                    title:{
+                            required: true,
+                            message: '用户名不能为空！'
+                        }
+                    },
+                  
                     form: {
                         id:'',
                         password: '',
                         password1: '',
-                        name:""
+                        username:"",
                     },
                     formLabelWidth: '120px',
                     checkAll: false,
@@ -191,7 +203,8 @@
                     cities: [],
                     isIndeterminate: true,
                     id:[],
-                    editmune:false
+                    editmune:false,
+                    itemid:""
                 };
             },
             watch:{
@@ -202,7 +215,6 @@
                 }
             },
             methods:{
-
                 getdate(){
                     let that = this
                     axios.get("/admin/users/getData").then(function (res) {
@@ -211,7 +223,7 @@
                             that.cities.push(item)
                             that.id.push(item.id)
                         })
-                      //  console.log(that.cities)
+                      //console.log(that.cities)
                     })
                 },
                 eite(){
@@ -220,16 +232,31 @@
                              this.editmune=true
                      return
                     }
-                    console.log(this.checkedCities)
+                    let that = this
+                    axios.post("/admin/users/add",{
+                            data:{id:this.itemid},
+                            roles:this.checkedCities
+                        }).then(function(res){
+                      that.tableData.map(item=>{
+                            if(item.id == that.itemid){
+                             item.roles_ids=that.checkedCities
+                            }
+                        })
+                        that.dialogTableVisible = false
+                        that.$message({
+                                message: '修改成功!',
+                                type: 'success'
+                            });
+                    })
                 },
                 editPasswordFrom(){
                     this.dialogFormVisible = true
                     this.editmune=true
+                    this.checkedCities=[]
                 },
                 openSavePasswordFrom:function(userId){
                     if(userId){
                         this.form.id = userId;
-
                     }
                     this.dialogFormVisible = true
                     this.editmune=false
@@ -242,7 +269,7 @@
                                      this.$message.error('两次密码不一致，请从新输入！');
                                      return
                                 }
-                                if(this.editmune=false){
+                                if(that.editmune==false){
                                     let data = this.from
                                 axios.post("/admin/reset/password",{
                                     data:this.form
@@ -260,11 +287,15 @@
                             }else{
                                 if(this.checkedCities.length==0){
                                     this.$message.error('权限不能为空！');
-                                     return
+                                    return
                                 }
-                                this.editmune=true
-                                console.log(this.form)
-                                console.log(this.checkedCities)
+                                let that = this
+                                 axios.post("/admin/users/add",{
+                                     data:this.form,
+                                     roles:this.checkedCities
+                                 }).then(function(res){
+
+                                 })
                             }
                             } else {
                                 console.log('error submit!!');
@@ -280,13 +311,8 @@
                 },
                 handleEdit(index, row) {
                     this.dialogTableVisible = true
-                   // console.log(index, row);     
-                    this.tableData.map(item=>{
-                       if(item.id=row.id){
-                          // console.log(item)
-                           this.checkedCities=item.roles
-                       }
-                    })
+                    this.checkedCities=row.roles_ids
+                    this.itemid = row.id
                 },
                 handleCheckAllChange(val) {
                     this.checkedCities = val ? this.id : [];
@@ -299,27 +325,46 @@
                 },
                 handleDelete(index, row) {
                     let that = this
-                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    let statemessage=""
+                    if(row.status==1){
+                        statemessage="禁用"
+                    }
+                    if(row.status==0){
+                        statemessage="启用"  
+                    }
+                    this.$confirm(`此操作将${statemessage}, 是否继续?`, '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                       // console.log(index, row);
-                        that.tableData=that.tableData.filter(function(item){   
-                        return item.id!==row.id  
-                    });
-
+                    //console.log(row.id)
+                    //console.log(row.status)
+                   // /admin/users/参数/status  post方式
+                    axios.post("/admin/users/"+row.id+"/status").then(function(res){
                         that.$message({
                             type: 'success',
-                            message: '删除成功!'
+                            message: `${res.data.tips}`
                     });
+                    that.tableData.map(item=>{
+                            if(item.id == row.id){
+                                if(item.status==1){
+                                    item.status=0
+                                }else{
+                                    item.status=1
+                                }
+                            }
+                        })
+                        //console.log(that.tableData)
+                    })
                     }).catch(() => {
                         that.$message({
                             type: 'info',
-                            message: '已取消删除'
+                            message: '已取消'
                         });          
                     
                     })
+                  
+
 
                 },
             },
