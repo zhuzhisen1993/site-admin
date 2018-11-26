@@ -64,12 +64,13 @@ class UserController extends Controller
                         'password'=>bcrypt($data['password'])
                     ]);
 
-                    foreach ($roles as $val){
-                        DB::table('admin_role')->insert([
-                            'admin_id'=>$users->id,
-                            'role_id'=>$val
-                        ]);
+                    foreach ($roles as $key =>$val){
+                            $arr[$key]['admin_id'] = $users->id;
+                            $arr[$key]['role_id'] = $val;
                     }
+
+                    \App\Models\admin\AdminRole::insert($arr);
+
                 }
                 return $this->response($users,'success','添加成功');
             });
@@ -77,54 +78,6 @@ class UserController extends Controller
 
     }
 
-
-
-
-    public function store(Request $request,User $user){
-        if(empty($request->input('username'))){
-            return redirect()->route('admin.users.create')->with('status','用户名不能为空！');
-        }
-        if(empty($user->password = $request->input('password'))|| strlen($user->password = $request->input('password'))<6 ){
-            return redirect()->route('admin.users.create')->with('status','密码不能为空且长度不能小于6');
-        }else{
-            if($user->password = $request->input('password') != $user->password = $request->input('confirm_password')){
-                return redirect()->route('admin.users.create')->with('status','两次密码不一致请重新输入');
-            }else{
-                DB::transaction(function () use ($user,$request){
-                    $roles = $request->input('roles');
-                    if($roles){
-                        $user->name = $request->input('username');
-                        $user->password = bcrypt($request->input('password'));
-                        $user->save();
-                        foreach ($roles as $val){
-                           DB::table('admin_role')->insert([
-                               'admin_id'=>$user->id,
-                               'role_id'=>$val
-                           ]);
-                        }
-                    }
-                });
-                return redirect()->route('admin.users.index');
-            }
-        }
-    }
-
-    public function update(User $user,Request $request){
-        $roles = $request->input('roles');
-        if($request->input('roles')){
-            DB::transaction(function () use ($user,$roles){
-                AdminRole::where('admin_id',$user->id)->delete();
-                foreach ($roles as $key=>$val){
-                    $arr[$key]['admin_id'] = $user->id;
-                    $arr[$key]['role_id'] = $val;
-                }
-                AdminRole::insert($arr);
-            });
-            return redirect()->route('admin.users.index');
-        }else{
-            return redirect()->route('admin.users.create')->with('status','角色不允许为空，请选择对应的角色!');
-        }
-    }
 
     public function resetPassword(Request $request){
         $userId = $request->input('data.id');
