@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
 //Route::group(['namespace' => 'Admin'], function () {
 //    Route::get('/dashboard', 'AdminController@index'); //后台首页
@@ -23,9 +23,9 @@ Route::get('/', function () {
 //    Route::get('/admin/article/create','ArticleController@create');//创建文章
 //});
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+//Auth::routes();
+//
+//Route::get('/home', 'HomeController@index')->name('home');
 
 
 
@@ -40,4 +40,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 |
 */
 require __DIR__ . '/admin.php';
+
+Route::any('{all}', function () {
+    return view('layouts/index');
+})->where(['all'=>'.*']);
 

@@ -39,8 +39,8 @@ class LoginController extends Controller
 
 
     /**
-* 显示后台登录模板
-*/
+    * 显示后台登录模板
+    */
      public function showLoginForm()
      {
          return view('admin.login.login');

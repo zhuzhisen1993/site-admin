@@ -17,51 +17,13 @@ class ArticleController extends Controller
         return view('admin.articles.index');
     }
 
-    //文章创建页面
+    public function getData(){
 
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function create()
-    {
-        return view("admin.articles.create");
+        //$data['article_type'] =
+        //return $this->response($data);
     }
 
-    //文章创建
 
-    /**
-     *
-     */
-    public function store()
-    {
-
-    }
-
-    //文章修改页面
-
-    /**
-     *
-     */
-    public function edit()
-    {
-
-    }
-
-    //文章修改
-
-    /**
-     *
-     */
-    public function update()
-    {
-
-    }
-
-    //文章删除
-
-    /**
-     *
-     */
     public function destroy()
     {
 

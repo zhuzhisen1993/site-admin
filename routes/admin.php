@@ -15,7 +15,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
     Route::group(['middleware' => ['auth.admin','permission']], function () {
         Route::get('/', 'AdminController@index'); //后台首页
 
-
         //用户管理
         route::get('users','UserController@index');
         route::get('users/getData','UserController@getData');
@@ -34,6 +33,13 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('permisssion/add','PermissionController@add');
         route::get('permission/{permission}/edit','PermissionController@edit');
         route::post('permission/{permission}/destroy','PermissionController@destroy');
+
+        //文章类型管理
+        route::get('articleTypes','ArticleTypeController@index');
+        route::get('articleTypes/getData','ArticleTypeController@getData');
+        route::post('articleTypes/add','ArticleTypeController@add');
+        route::post('articleTypes/{articleTpye}/edit','ArticleTypeController@edit');
+        route::post('articleTypes/{articleTpye}/destroy','ArticleTypeController@destroy');
 
 
         Route::get('profile','AdminController@adminInfo');//管理员资料
