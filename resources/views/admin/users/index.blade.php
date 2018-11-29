@@ -337,8 +337,6 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                    //console.log(row.id)
-                    //console.log(row.status)
                    // /admin/users/参数/status  post方式
                     axios.post("/admin/users/"+row.id+"/status").then(function(res){
                         that.$message({
