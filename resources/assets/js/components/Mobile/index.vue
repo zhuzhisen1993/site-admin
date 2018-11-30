@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    
   <div v-loading="loading" element-loading-text="加载中..." style="min-height: 35vw;" v-if="!error">
     <banner :banner="banner"/>
 
@@ -201,6 +200,10 @@
   .home {
     display: flex;
     flex-direction: column;
+  }
+  .home el-button{
+    width: 10%!important;
+    margin: 0 auto!important
   }
 
   .no-info {

@@ -1,6 +1,6 @@
 <template>
   <div class="good-item">
-    <div style="">
+    <div>
       <div class="good-img">
         <a @click="openProduct(msg.productId)">
           <img v-lazy="msg.productImageBig" :alt="msg.productName" :key="msg.productImageBig">
@@ -80,8 +80,10 @@
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  @import "../../../style/mixin";
-  @import "../../../style/theme";
+  @import "../../../style/mixin.scss";
+  @import "../../../style/theme.scss";
+  @import "../../../style/index.scss";
+
 
   .good-item {
     background: #fff;

@@ -23,10 +23,10 @@ Vue.use(ElementUI, { locale })
 Vue.use(VueRouter);
 Vue.component('app', App)
 Vue.use(VueLazyload, {
-    // preLoad: 1.3,
-    // error: 'dist/error.png',
-    loading: "./static/images/load.gif"
-    // attempt: 1
+    //preLoad: 1.3,
+    //error: 'dist/error.png',
+    loading:require('./static/images/load.gif'),
+     //attempt: 1
   })
 /**
  * Next, we will create a fresh Vue application instance and attach it to

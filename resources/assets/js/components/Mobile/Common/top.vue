@@ -227,7 +227,7 @@
           })
         } else if (v === -2) {
           this.$router.push({
-            path: '/refreshgoods'
+            path: '/goods'
           })
         } else {
           // 站内跳转
