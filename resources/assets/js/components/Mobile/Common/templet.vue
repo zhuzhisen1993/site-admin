@@ -23,6 +23,14 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" rel="stylesheet/scss">
+  @import "../../../style/index.scss";
 
+  #app {
+    height: 100%;
+  }
+
+  .main {
+    background: #ededed;;
+  }
 </style>
