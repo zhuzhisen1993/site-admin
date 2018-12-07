@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta property="wb:webmaster" content="b1217e0e46e1e300"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta id="token" name="token" value="{{csrf_token()}}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @section('header-css')

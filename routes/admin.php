@@ -42,6 +42,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('articleTypes/{articleTpye}/edit','ArticleTypeController@edit');
         route::post('articleTypes/{articleTpye}/destroy','ArticleTypeController@destroy');
 
+        route::any('upload','UploadController@index');
+
 
         Route::get('profile','AdminController@adminInfo');//管理员资料
         Route::post('reset/password','UserController@resetPassword');

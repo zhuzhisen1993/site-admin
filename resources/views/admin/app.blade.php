@@ -161,6 +161,7 @@
                         <i class="fa fa-dashboard"></i> <span>控制面板</span>
                     </a>
                 </li>
+
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-user"></i>
@@ -190,6 +191,82 @@
                         <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
                     </ul>
                 </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>产品管理</span>
+                        <span class="pull-right-container">
+                             <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
+                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>会员管理</span>
+                        <span class="pull-right-container">
+                             <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
+                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>订单管理</span>
+                        <span class="pull-right-container">
+                             <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
+                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                    </ul>
+                </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>留言管理</span>
+                        <span class="pull-right-container">
+                             <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
+                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>导航图管理</span>
+                        <span class="pull-right-container">
+                             <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
+                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                    </ul>
+                </li>
+
+
+
+
 
 
                 <li class="treeview">

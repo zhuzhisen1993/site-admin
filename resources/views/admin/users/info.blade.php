@@ -29,9 +29,10 @@
                         <el-input v-model.number="ruleForm2.age"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="用户头像" prop="age">
+                    <el-form-item label="用户头像" prop="avatar">
                         <el-upload
-                                action="https://jsonplaceholder.typicode.com/posts/"
+                                action="/admin/upload"
+                                :headers="headers"
                                 list-type="picture-card"
                                 :on-preview="handlePictureCardPreview"
                                 :on-remove="handleRemove">
@@ -55,13 +56,16 @@
             delimiters: ['@{{', '}}'],
                 data() {
                     return {
+                        headers:{
+                            'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].getAttribute("content")
+                        },
                         ruleForm2:{
                             pass:'',
                             checkPass:'',
                             age:''
                         },
                         dialogImageUrl: '',
-                        dialogVisible: false
+                        dialogVisible: false,
                     };
                 },
                 methods: {
