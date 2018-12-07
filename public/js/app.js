@@ -51875,7 +51875,7 @@ var render = function() {
                   [
                     item.picUrl
                       ? _c("img", {
-                          staticClass: "img1",
+                          staticClass: "img1 ",
                           attrs: { src: item.picUrl }
                         })
                       : _vm._e(),
