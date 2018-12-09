@@ -14,9 +14,7 @@ class UserInfoController extends Controller
 
 
     public function getData(User $user){
-
         return $user;
-        
     }
 
     public function update(Request $request,User $user){
