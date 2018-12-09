@@ -4,25 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Handlers\ImageUploadHandler;
 use App\Models\admin\User;
-use Illuminate\Support\Facades\DB;
 
 class UploadController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index(Request $request,ImageUploadHandler $uploader)
     {
 
-        return json_encode('123');
-        dd('123');
         $file = $request->file('file');
+        if ($file) {
+            $uploader->save($file, 'avatars','1','360');
+        }
 
-        dd($file);
     }
-
-
 
 
 }
