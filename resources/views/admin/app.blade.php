@@ -187,7 +187,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
-                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                        <li><a href="{{url('admin/article')}}"><i class="fa fa-circle-o"></i>内容管理</a></li>
                     </ul>
                 </li>
 

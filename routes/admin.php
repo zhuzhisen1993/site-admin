@@ -43,6 +43,14 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('articleTypes/{articleTpye}/destroy','ArticleTypeController@destroy');
 
 
+        //文章管理
+        route::get('article','ArticleController@index');
+        route::get('article/getDate','ArticleController@artilceData');
+        route::post('article/add','ArticleController@add');
+        route::post('article/{article}/edit','ArticleController@edit');
+        route::post('article/{article}/destory','ArticleController@destory');
+
+
         Route::get('profile','AdminController@adminInfo');//管理员资料
         Route::post('reset/password','UserController@resetPassword');
 
