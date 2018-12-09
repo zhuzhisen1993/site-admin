@@ -42,6 +42,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('articleTypes/{articleTpye}/edit','ArticleTypeController@edit');
         route::post('articleTypes/{articleTpye}/destroy','ArticleTypeController@destroy');
 
+        route::any('upload','UploadController@index');
+
 
         //文章管理
         route::get('article','ArticleController@index');
