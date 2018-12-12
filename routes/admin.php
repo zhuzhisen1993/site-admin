@@ -55,6 +55,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('article/{article}/destory','ArticleController@destory');
 
 
+
         //产品类型管理
         route::get('productCatalog','ProductCatalogController@index');
         route::get('productCatalog/getDate','ProductCatalogController@getData');
