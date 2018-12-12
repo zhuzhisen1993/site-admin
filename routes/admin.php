@@ -20,7 +20,9 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::get('users/getData','UserController@getData');
         route::post('users/add','UserController@add');
         route::post('users/{user}/status','UserController@status');
-        route::get('users/{user}/info','UserInfoController@index');
+
+        route::get('usersInfo','UserInfoController@index');
+        route::get('usersInfo/{user}','UserInfoController@getate');
 
         //角色管理
         route::get('roles','RoleController@index');
@@ -43,6 +45,22 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('articleTypes/{articleTpye}/destroy','ArticleTypeController@destroy');
 
         route::any('upload','UploadController@index');
+
+
+        //文章管理
+        route::get('article','ArticleController@index');
+        route::get('article/getDate','ArticleController@artilceData');
+        route::post('article/add','ArticleController@add');
+        route::post('article/{article}/edit','ArticleController@edit');
+        route::post('article/{article}/destory','ArticleController@destory');
+
+
+        //产品类型管理
+        route::get('productCatalog','ProductCatalogController@index');
+        route::get('productCatalog/getDate','ProductCatalogController@getData');
+        route::post('productCatalog/add','ProductCatalogController@add');
+        route::post('productCatalog/{productCatalog}/edit','ProductCatalogController@edit');
+        route::post('productCatalog/{productCatalog}/destory','ProductCatalogController@destory');
 
 
         Route::get('profile','AdminController@adminInfo');//管理员资料

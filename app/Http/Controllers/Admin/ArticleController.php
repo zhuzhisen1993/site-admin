@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\admin\ArticleTpye;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repository\AdminRepository;
+use App\Models\admin\Article;
+
 
 class ArticleController extends Controller
 {
@@ -17,10 +20,28 @@ class ArticleController extends Controller
         return view('admin.articles.index');
     }
 
-    public function getData(){
+    public function articleData(){
+        $data['article'] = Article::with('articleType')->get();
+        $data['articleType'] = ArticleTpye::all();
 
-        //$data['article_type'] =
-        //return $this->response($data);
+        return $this->response($data,'success','数据请求成功！');
+    }
+
+    public function add(Request $request){
+        $data = $request->input('data');
+        $result = array();
+        if($request->all()){
+            $article = Article::where(['article_type_id'=>$data['article_type_id'],'title'=>$data['title']])->first();
+            if(!$article){
+                $result = Article::insert($data);
+                $tips = '内容添加成功！';
+            }else{
+                $tips = '该数据已经存在请勿重复操作！';
+            }
+        }else{
+            $tips = '提交的数据不能为空，请先填充数据！';
+        }
+        return $this->response($result,'success',$tips);
     }
 
 
