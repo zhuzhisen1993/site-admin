@@ -42,7 +42,7 @@
             
             <template>
                 <el-table
-                    :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())||data.status-0==value-0).slice((currpage - 1) * pagesize, currpage * pagesize)"
+                    :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)"
                     style="width: 100% ; text-align: center;"  border>
                     <el-table-column
                     label="序号"
