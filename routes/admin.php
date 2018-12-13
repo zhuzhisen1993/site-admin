@@ -22,7 +22,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('users/{user}/status','UserController@status');
 
         route::get('usersInfo','UserInfoController@index');
-        route::get('usersInfo/{user}','UserInfoController@getate');
+        route::get('usersInfo/{user}','UserInfoController@getData');
 
         //角色管理
         route::get('roles','RoleController@index');
