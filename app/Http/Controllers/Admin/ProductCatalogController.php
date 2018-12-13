@@ -8,9 +8,17 @@ use App\Models\admin\ProductCatalog;
 
 class ProductCatalogController extends Controller
 {
-    public function index(){
 
-        return view('admin.product.catalog');
+    protected $nav_active;
+
+    public function __construct()
+    {
+        $this->nav_active = 'Product';
+    }
+
+    public function index(){
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.product.catalog',$data);
     }
     public function getData(){
         $arr[] = '顶级分类';

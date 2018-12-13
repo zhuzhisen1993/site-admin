@@ -11,6 +11,14 @@ use App\Models\admin\RolePermission;
 
 class RoleController extends Controller
 {
+
+    protected $nav_active;
+
+    public function __construct()
+    {
+        $this->nav_active = 'User';
+    }
+
     public function index(Request $request){
 //            $role = Role::query();
 //                if($request->input('search','')){
@@ -21,7 +29,8 @@ class RoleController extends Controller
 //                }
 //            $roles= $role->paginate();
 //            return view('admin.role.index',compact('roles'));
-            return view('admin.role.index');
+            $data['nav_active'] = $this->nav_active;
+            return view('admin.role.index',$data);
     }
 
     public function getData(){

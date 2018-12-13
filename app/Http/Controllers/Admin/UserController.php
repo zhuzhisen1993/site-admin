@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    protected $nav_active;
+
+    public function __construct()
+    {
+        $this->nav_active = 'User';
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -20,7 +27,8 @@ class UserController extends Controller
 //        $user = User::query()->with('roles');
 //        $users = $user->paginate();
 //        return view('admin.users.index',compact('users'));
-        return view('admin.users.index');
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.users.index',$data);
     }
 
     public function getData(){

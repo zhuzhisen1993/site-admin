@@ -8,8 +8,17 @@ use App\Models\admin\User;
 
 class UserInfoController extends Controller
 {
+
+    protected $nav_active;
+
+    public function __construct()
+    {
+        $this->nav_active = 'User';
+    }
+
     public function index(){
-        return view('admin.users.info');
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.users.info',$data);
     }
 
 

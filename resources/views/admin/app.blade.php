@@ -162,7 +162,7 @@
                     </a>
                 </li>
 
-                <li class="treeview">
+                <li class="treeview" @if($nav_active == 'User') active @endif>
                     <a href="#">
                         <i class="fa fa-user"></i>
                         <span>用户管理</span>
@@ -178,7 +178,7 @@
                     </ul>
                 </li>
 
-                <li class="treeview">
+                <li class="treeview @if($nav_active == 'Article') active @endif">
                     <a href="#">
                         <i class="fa fa-pie-chart"></i>
                         <span>内容管理</span>
@@ -187,13 +187,12 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{url('admin/productCatalog')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
                         <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
                         <li><a href="{{url('admin/article')}}"><i class="fa fa-circle-o"></i>内容管理</a></li>
                     </ul>
                 </li>
 
-                <li class="treeview">
+                <li class="treeview @if($nav_active == 'Product') active @endif">
                     <a href="#">
                         <i class="fa fa-pie-chart"></i>
                         <span>产品管理</span>
@@ -202,8 +201,8 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="{{url('admin/articleTypes')}}"><i class="fa fa-circle-o"></i>类型管理</a></li>
-                        <li><a href=""><i class="fa fa-circle-o"></i>内容管理</a></li>
+                        <li><a href="{{url('admin/productCatalog')}}"><i class="fa fa-circle-o"></i>产品类型</a></li>
+                        <li><a href="{{url('admin/product')}}"><i class="fa fa-circle-o"></i>产品内容</a></li>
                     </ul>
                 </li>
 

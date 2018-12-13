@@ -64,6 +64,15 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('productCatalog/{productCatalog}/destory','ProductCatalogController@destory');
 
 
+        //产品管理
+        route::get('product','ProductController@index');
+        route::get('product/getDate','ProductController@getData');
+        route::post('product/add','ProductController@add');
+        route::post('product/{productCatalog}/edit','ProductController@edit');
+        route::post('product/{productCatalog}/destory','ProductController@destory');
+
+
+
         Route::get('profile','AdminController@adminInfo');//管理员资料
         Route::post('reset/password','UserController@resetPassword');
 
