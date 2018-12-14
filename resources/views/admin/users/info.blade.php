@@ -23,7 +23,7 @@
                         <el-input type="text" v-model="ruleForm.name" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="邮箱" prop="email">
-                        <el-input type="text" v-model="ruleForm.email" autocomplete="off"></el-input>
+                        <el-input type="text" disabled  v-model="ruleForm.email" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="个人介绍" prop="userinfo">
                         <el-input  type="textarea" v-model.number="ruleForm.userinfo"></el-input>
@@ -79,6 +79,17 @@
                     };
                 },
                 methods: {
+                    getuserinfo(){
+                        let that = this
+                        axios.get('usersInfo/{{Auth::guard('admin')->id()}}').then(function (res) {
+                        console.log(res)
+                        that.ruleForm.name= res.data.name
+                        that.ruleForm.email= res.data.email
+                        that.imageUrl= res.data.img_url
+
+
+                    })
+                    },
                     submitForm(formName) {
                             this.$refs[formName].validate((valid) => {
                             if (valid) {
@@ -93,6 +104,7 @@
                         },
                         handleAvatarSuccess(res, file) {
                             this.imageUrl = URL.createObjectURL(file.raw);
+
                         },
                         beforeAvatarUpload(file) {
                             const isJPG = file.type === 'image/jpeg';
@@ -110,7 +122,10 @@
                     resetForm(formName) {
                             this.$refs[formName].resetFields();
                     }
-                }
+                },
+                mounted() {
+                    this.getuserinfo()
+                },
             })
 
     </script>
