@@ -20,7 +20,7 @@ class UploadController extends Controller
             $path = $uploader->save($file, 'avatars','1','360');
         }
 
-        return json_encode($path);
+        return $path;
 
     }
 

@@ -62,7 +62,6 @@
                             name:'',
                             email:'',
                             userinfo:'',
-                            
                         },
                         imageUrl: '',
                         dialogVisible: false,
@@ -82,29 +81,37 @@
                     getuserinfo(){
                         let that = this
                         axios.get('usersInfo/{{Auth::guard('admin')->id()}}').then(function (res) {
-                        console.log(res)
+                       //console.log(res)
                         that.ruleForm.name= res.data.name
                         that.ruleForm.email= res.data.email
                         that.imageUrl= res.data.img_url
-
-
                     })
                     },
                     submitForm(formName) {
                             this.$refs[formName].validate((valid) => {
                             if (valid) {
-                                console.log(this.ruleForm)
-                                console.log(this.imageUrl)
-                                alert('submit!');
+                                 let that = this
+                                axios.post("usersInfo/{{Auth::guard('admin')->id()}}/edit",{name: this.ruleForm.name,image_url: this.imageUrl,introduce :this.ruleForm.userinfo}).then(res=>{
+                                  // console.log(res)
+                                    if(res.status==200){
+                                        that.$message({
+                                            message: '更新成功!',
+                                            type: 'success'
+                                        });
+                                    }
+                                })
+
                             } else {
-                                console.log('error submit!!');
+                                this.$message({
+                                            message: '更新失败!',
+                                            type: 'error'
+                                });
                                 return false;
                             }
                             });
                         },
-                        handleAvatarSuccess(res, file) {
-                            this.imageUrl = URL.createObjectURL(file.raw);
-
+                        handleAvatarSuccess(res, file, fileList) {
+                            this.imageUrl = res.path.replace('http://localhost',"")
                         },
                         beforeAvatarUpload(file) {
                             const isJPG = file.type === 'image/jpeg';
