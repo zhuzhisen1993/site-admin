@@ -17,8 +17,10 @@ class UploadController extends Controller
 
         $file = $request->file('file');
         if ($file) {
-            $uploader->save($file, 'avatars','1','360');
+            $path = $uploader->save($file, 'avatars','1','360');
         }
+
+        return json_encode($path);
 
     }
 
