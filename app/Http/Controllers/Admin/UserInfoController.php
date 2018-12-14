@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\admin\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserInfoController extends Controller
 {
@@ -22,12 +23,12 @@ class UserInfoController extends Controller
     }
 
 
-    public function getData(User $user){
-        return $user;
+    public function getData(){
+        return Auth::guard('admin')->user();
     }
 
-    public function update(Request $request,User $user){
-
+    public function edit(Request $request,User $user){
+        //$this->authorize('own', $user);
         $user->update([
             'name' =>$request->input('data.name'),
             'img_url' =>$request->input('data.img_url'),
