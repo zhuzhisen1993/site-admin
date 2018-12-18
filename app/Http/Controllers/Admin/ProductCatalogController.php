@@ -26,6 +26,7 @@ class ProductCatalogController extends Controller
 //        foreach($productCatalog as $value){
 //           echo str_repeat('--', $value['level']), $value['name'].'<br />';
 //        }
+
     }
 
     public function add(Request $request){
