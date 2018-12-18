@@ -18,23 +18,26 @@
         <div class="box-header with-border">
             <h3 class="box-title">用户列表</h3>
             <div class="box-tools">
+
             <div class="input-group">
-                        <input type="text" class="form-control input-sm pull-right"  v-model="search" name="s_title"      style="width: 150px;" placeholder="搜索用户标题">
-                        <div class="input-group-btn">
-                            <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+
+                        <div class="pull-right">
+                            <input type="text" class="form-control input-sm pull-left"  v-model="search" name="s_title"      style="width: 150px;" placeholder="搜索用户标题">
+                            <div class="input-group-btn">
+                                <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="input-group">
-                    <template>
-                <el-select v-model="value" size="mini" @change="searchstatus"  placeholder="请选择状态">
-                    <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    </el-option>
-                </el-select>
-                </template>
+
+                        <el-select v-model="value" size="mini" @change="searchstatus"  placeholder="请选择状态" class="pull-right" style="margin-right:10px;">
+                            <el-option
+                                    v-for="item in options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+
+
                     </div>
             </div>
         </div>
@@ -399,9 +402,6 @@
     .el-input--mini .el-input__inner {
     height: 30px;
     line-height: 28px;
-}
-.input-group{
-    margin-right: 20px
 }
     .box-tools{
         display:flex

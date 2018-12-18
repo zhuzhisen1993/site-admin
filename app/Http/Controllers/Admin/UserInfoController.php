@@ -22,20 +22,17 @@ class UserInfoController extends Controller
         return view('admin.users.info',$data);
     }
 
-
     public function getData(){
         return Auth::guard('admin')->user();
     }
 
     public function edit(Request $request,User $user){
-        //$this->authorize('own', $user);
-        $user->update([
-            'name' =>$request->input('data.name'),
-            'img_url' =>$request->input('data.img_url'),
-            'introduce'=>$request->input('data.introduce')
-        ]);
-
-        $this->response(array(),'success','修改成功');
+        if($user->id != Auth::guest('admin')->id){
+            return $this->response([],'warning','你没有改权限');
+        }else{
+            $user->update($request->all());
+            $this->response(array(),'success','修改成功');
+        }
     }
 
 }

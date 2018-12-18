@@ -8,8 +8,17 @@ use App\Models\admin\ArticleTpye;
 
 class ArticleTypeController extends Controller
 {
+
+    protected $nav_active;
+
+    public function __construct()
+    {
+        $this->nav_active = 'Article';
+    }
+
     public function index(){
-        return view('admin.articles.type_list');
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.articles.type_list',$data);
     }
 
     public function getData(){

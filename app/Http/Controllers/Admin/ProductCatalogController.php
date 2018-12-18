@@ -21,11 +21,11 @@ class ProductCatalogController extends Controller
         return view('admin.product.catalog',$data);
     }
     public function getData(){
-        $arr[] = '顶级分类';
-        $productCatalog = $this->getTree(ProductCatalog::all());
-        foreach($productCatalog as $value){
-           echo str_repeat('--', $value['level']), $value['name'].'<br />';
-        }
+        return json_encode(ProductCatalog::all());
+//        $productCatalog = $this->getTree(ProductCatalog::all());
+//        foreach($productCatalog as $value){
+//           echo str_repeat('--', $value['level']), $value['name'].'<br />';
+//        }
     }
 
     public function add(Request $request){
