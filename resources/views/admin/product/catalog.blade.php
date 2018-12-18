@@ -36,8 +36,20 @@
                                         width="40">
                                         </el-table-column>
                                         <el-table-column
-                                        label="Name"
+                                        label="name"
                                         prop="name">
+                                        </el-table-column>
+                                        <el-table-column
+                                        label="level"
+                                        prop="level">
+                                        </el-table-column>
+                                        <el-table-column
+                                        label="created_at"
+                                        prop="created_at">
+                                        </el-table-column>
+                                        <el-table-column
+                                        label="updated_at"
+                                        prop="updated_at">
                                         </el-table-column>
                                         <el-table-column
                                         label="操作"
@@ -65,46 +77,80 @@
                                         </template>
                                         </el-table-column>
                                     </el-table>
-                     <el-dialog  :title="title" :visible.sync="roleFrom">
-                                        <el-form :model="form" :rules="rules" ref="roleForm">
-                                            <el-form-item label="类型级别" :label-width="formLabelWidth" prop="Actionsku">
-                                            <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="请输入内容"></el-input>
-                                            <div class="highlight" >
-                                            <el-tree  accordion transiton="fade" v-show="tree" :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-                                            </div>
-                                            </el-form-item>
-                                            <el-form-item label="类型名称" :label-width="formLabelWidth" prop="">
-                                            <el-input  @focus="hidetree()" v-model="form.name" placeholder="请输入内容"></el-input>
-                                            </el-form-item>
-                                            <el-form-item label="是否显示" :label-width="formLabelWidth" prop="">
-                                            <el-radio v-model="form.isshow" label="0">否</el-radio>
-                                            <el-radio v-model="form.isshow" label="1">是</el-radio>
-                                            </el-form-item>
+                                    <el-dialog   :title="title" :visible.sync="roleFrom">
+                                                        <el-form  :model="form" :rules="rules" ref="roleForm">
+                                                            <el-form-item label="类型级别" :label-width="formLabelWidth" prop="Actionsku">
+                                                            <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="请输入内容"></el-input>
+                                                            <div class="highlight" >
+                                                            <el-tree  accordion transiton="fade" v-show="tree" :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                                                            </div>
+                                                            </el-form-item>
+                                                            <el-form-item label="类型名称" :label-width="formLabelWidth" prop="">
+                                                            <el-input  @focus="hidetree()" v-model="form.name" placeholder="请输入内容"></el-input>
+                                                            </el-form-item>
+                                                            <el-form-item label="是否显示" :label-width="formLabelWidth" prop="">
+                                                            <el-radio v-model="form.isshow" label="0">否</el-radio>
+                                                            <el-radio v-model="form.isshow" label="1">是</el-radio>
+                                                            </el-form-item>
 
+                                                        </el-form>
+                                                        <div slot="footer" class="dialog-footer">
+                                                            <el-button @click="roleFrom = false">取 消</el-button>
+                                                            <el-button type="primary"  v-loading.fullscreen.lock="fullscreenLoading" @click="SubmitFrom('roleForm')">确 定</el-button>
+                                                    </div>
+                                        </el-dialog>
+                                        <el-dialog title="编辑级别" :visible.sync="dialogFormVisible">
+                                        <el-form :model="fomedata">
+                                            <el-form-item label="级别名称" :label-width="formLabelWidth">
+                                            <el-input v-model="fomedata.name" autocomplete="off"></el-input>
+                                            </el-form-item>
                                         </el-form>
                                         <div slot="footer" class="dialog-footer">
-                                            <el-button @click="roleFrom = false">取 消</el-button>
-                                            <el-button type="primary"  v-loading.fullscreen.lock="fullscreenLoading" @click="SubmitFrom('roleForm')">确 定</el-button>
-                                    </div>
-                        </el-dialog>
-                        <el-dialog title="编辑级别" :visible.sync="dialogFormVisible">
-                        <el-form :model="fomedata">
-                            <el-form-item label="级别名称" :label-width="formLabelWidth">
-                            <el-input v-model="fomedata.name" autocomplete="off"></el-input>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="dialogFormVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="editoption">确 定</el-button>
-                        </div>
-                        </el-dialog>
+                                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                                            <el-button type="primary" @click="editoption">确 定</el-button>
+                                        </div>
+                                        </el-dialog>
 </div>
 <script>
+
+
+
+
+
     //递归数据。处理为树形结构
+
+       
+        // function getTree(array,pid = 0, level = 0){
+
+        //    const list = [];
+        //    array.forEach(function(res,index){
+        //        res1 = res
+        //        if(res.pid == pid){
+        //             //父节点为根节点的节点,级别为0，也就是第一级
+        //         res.level = level;
+        //         //把数组放到list中
+        //         list.push(res);
+        //         //把这个节点从数组中移除,减少后续递归消耗
+        //          array.splice(index,1)
+        //         //unset($array[$key]);
+        //         //开始递归,查找父ID为该节点ID的节点,级别则为原级别+1
+        //         getTree(array, res1.id, level+1);
+              
+        //        }
+        //    });
+        //    console.log(list);
+        //    return list;
+
+        // }
+
+
+
+
+
          const array2tree = (array, pflag = "pid", sflag = "id", root = 0) => {
                             function cascader(pid, level = 1) {
                                 const target = [];
-                                array.forEach(a => {
+                                array.forEach(a=> {
                                 const _clone = Object.assign({}, a);
                                 if (_clone[pflag] == pid) {
                                     _clone.level = level;
@@ -156,18 +202,28 @@
                         children: 'children'
                     },
                     tableData: [],
+                    ids:"123"
                }
             },
             methods:{
                 //保存编辑
                 editoption(){
-                    console.log(this.formdata)
-                    this.dialogFormVisible = false
+                    axios.post("productCatalog/"+this.ids+"/edit",{data:this.fomedata}).then(res=>{
+                        this.dialogFormVisible = false
+                        that.tableData.map(item=>{
+                        //console.log(item)
+                            })
+                        })
+                    //console.log(this.fomedata)
                 },
                 //编辑操作
                 handleedit(inde,row){
                     this.dialogFormVisible = true
                     this.fomedata.name=row.name
+                    this.fomedata.pid=row.pid
+                    this.ids = row.id
+                    this.fomedata.level=row.level
+                    this.fomedata.isshow=row.isshow
                 },
                 //禁用操作
                 handleEdit(index, row) {
@@ -189,17 +245,16 @@
                     //         type: 'success',
                     //         message: `${res.data.tips}`
                     // });
-                    //axios.post("").then(function(){
-                        
-                    // })
+                    // axios.post("").then(function(){
+                    //  })
                     that.tableData.map(item=>{
                         if(item.id == row.id){
                             if(item.isshow==1){
                                     item.isshow=0
                              }else{
-                                    item.isshow=1
+                                item.isshow=1
                              }
-                            }
+                        }
                     })
                     }).catch(() => {
                         that.$message({
@@ -212,7 +267,8 @@
                 },
                 //删除操作
                 handleDelete(index, row) {
-                    console.log(row.id);
+                    let oneoption={name:"添加顶级",cname:"添加顶级",isshow: 1,level: -1}
+                    //console.log(row.id);
                     let that = this
                     let statemessage="删除本条"
                     this.$confirm(`此操作将${statemessage}, 是否继续?`, '提示', {
@@ -231,6 +287,8 @@
                                     return item.id != row.id
                             })
                         })
+                        that.options=array2tree(that.tableData)
+                        that.options.unshift(oneoption)
                         }
                     })  
 
@@ -242,9 +300,15 @@
                     })
                 },
                 handleNodeClick(data) {
-                         this.selectedOptions = data.name
+                    // if(this.selectedOptions.indexOf(data.name)=="-1"){
+                    //     this.selectedOptions = this.selectedOptions+data.name
+                    // }else{
+                        this.selectedOptions = data.cname
                          this.form.id = data.id
                          this.form.level= data.level
+                    // // }
+                    //      this.form.id = data.id
+                    //      this.form.level= data.level
 
                  },
                  showtree(){
@@ -258,12 +322,18 @@
                     let level=0
                     axios.get("productCatalog/getDate").then(function(res){
                          that.tableData=res.data
-                         let oneoption={name:"添加顶级",isshow: 1,level: -1}
+                         let oneoption={name:"添加顶级",cname:"添加顶级",isshow: 1,level: -1}
                         that.options.push(oneoption)
                         let children = []
+
                         that.options=array2tree(res.data)
                         that.options.unshift(oneoption)
-                        console.log(that.options)
+                        // console.log(that.options)
+                        that.tableData.map(item=>{
+                                //console.log(item)
+                                item.cname=item.name
+
+                        })
                     })
                 },
                 AddRoleFrom(){
@@ -277,7 +347,7 @@
                 },
                   //提交表单
                   SubmitFrom(){
-                    let oneoption={name:"添加顶级",isshow: 1,level: -1}
+                    let oneoption={name:"添加顶级",name:"添加顶级",isshow: 1,level: -1}
                     let that = this
                     if(this.form.name==""){
                         that.$message({
