@@ -1,13 +1,13 @@
 @extends('admin.app')
 @section('content-header')
     <h1>
-        用户管理
-        <small>用户</small>
+        产品内容管理
+        <small>产品内容</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> 主页</a></li>
-        <li>用户管理</li>
-        <li class="active">用户</li>
+        <li>内容管理</li>
+        <li class="active">内容</li>
     </ol>
 @stop
 

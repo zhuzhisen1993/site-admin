@@ -143,7 +143,20 @@
 
         // }
 
-
+        // const array1tree = (array,root = 0) => {
+        //     function setname(level=1) {
+        //         array.forEach(b => {
+        //             let  aname = ""
+        //             if(b.level == level){
+        //                 console.log(level)
+        //                 aname= aname+b.name
+        //                 b.cname = aname
+        //                 setname(level + 1);
+        //             }
+        //         });
+        //     }
+        //     return setname(root);
+        // }
 
 
 
@@ -211,7 +224,7 @@
                     axios.post("productCatalog/"+this.ids+"/edit",{data:this.fomedata}).then(res=>{
                         this.dialogFormVisible = false
                         that.tableData.map(item=>{
-                        //console.log(item)
+                            //console.log(item)
                             })
                         })
                     //console.log(this.fomedata)
@@ -317,6 +330,7 @@
                  hidetree(){
                     this.tree= false
                  },
+                 //获取数据
                 getdata(){
                     let that=this
                     let level=0
@@ -325,17 +339,18 @@
                          let oneoption={name:"添加顶级",cname:"添加顶级",isshow: 1,level: -1}
                         that.options.push(oneoption)
                         let children = []
-
                         that.options=array2tree(res.data)
                         that.options.unshift(oneoption)
-                        // console.log(that.options)
+                        console.log(that.tableData)
+                        let a =[]
                         that.tableData.map(item=>{
-                                //console.log(item)
-                                item.cname=item.name
-
+                             
+                                
                         })
+                      
                     })
                 },
+                //显示表单
                 AddRoleFrom(){
                     this.title = '添加类型'
                     this.resetFrom();
