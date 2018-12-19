@@ -84,6 +84,7 @@
                        //console.log(res)
                         that.ruleForm.name= res.data.name
                         that.ruleForm.email= res.data.email
+                        that.ruleForm.userinfo= res.data.introduce
                         that.imageUrl= res.data.img_url
                     })
                     },
@@ -91,7 +92,7 @@
                             this.$refs[formName].validate((valid) => {
                             if (valid) {
                                  let that = this
-                                axios.post("usersInfo/{{Auth::guard('admin')->id()}}/edit",{name: this.ruleForm.name,image_url: this.imageUrl,introduce :this.ruleForm.userinfo}).then(res=>{
+                                axios.post("usersInfo/{{Auth::guard('admin')->id()}}/edit",{name: this.ruleForm.name,img_url: this.imageUrl,introduce :this.ruleForm.userinfo}).then(res=>{
                                   // console.log(res)
                                     if(res.status==200){
                                         that.$message({

@@ -15,6 +15,7 @@
 //    return view('welcome');
 //});
 
+
 //Route::group(['namespace' => 'Admin'], function () {
 //    Route::get('/dashboard', 'AdminController@index'); //后台首页
 //    Route::get('/admin/profile','AdminController@adminInfo');//管理员资料
