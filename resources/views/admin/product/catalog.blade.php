@@ -77,12 +77,13 @@
                                         </template>
                                         </el-table-column>
                                     </el-table>
+
                                     <el-dialog   :title="title" :visible.sync="roleFrom">
                                                         <el-form  :model="form" :rules="rules" ref="roleForm">
                                                             <el-form-item label="类型级别" :label-width="formLabelWidth" prop="Actionsku">
                                                             <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="请输入内容"></el-input>
                                                             <div class="highlight" >
-                                                            <el-tree  accordion transiton="fade" v-show="tree" :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                                                                  <el-tree  accordion transiton="fade" v-show="tree" :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
                                                             </div>
                                                             </el-form-item>
                                                             <el-form-item label="类型名称" :label-width="formLabelWidth" prop="">
@@ -215,7 +216,9 @@
                         children: 'children'
                     },
                     tableData: [],
-                    ids:"123"
+                    catalogData:[],
+                    ids:"123",
+                    str:''
                }
             },
             methods:{
@@ -313,15 +316,32 @@
                     })
                 },
                 handleNodeClick(data) {
+                    this.str = '';
+
+                    this.selectedOptions = this.ftree(data);
+
+                    console.log(this.selectedOptions);
+
+
+                    //console.log(this.tableData);
                     // if(this.selectedOptions.indexOf(data.name)=="-1"){
                     //     this.selectedOptions = this.selectedOptions+data.name
                     // }else{
-                        this.selectedOptions = data.cname
+                        //this.selectedOptions = data.name
                          this.form.id = data.id
                          this.form.level= data.level
                     // // }
                     //      this.form.id = data.id
                     //      this.form.level= data.level
+
+                 },
+                ftree(data){
+                    if(this.catalogData[data.pid] != undefined){
+                         this.str = this.catalogData[data.pid].name+'>>'+this.str
+                        this.ftree(this.catalogData[data.pid])
+                    }
+
+                    return this.str+data.name;
 
                  },
                  showtree(){
@@ -336,19 +356,24 @@
                     let level=0
                     axios.get("productCatalog/getDate").then(function(res){
                          that.tableData=res.data
+                         that.tableData.forEach(function (res,index) {
+                            that.catalogData[res.id] = res
+                         })
                          let oneoption={name:"添加顶级",cname:"添加顶级",isshow: 1,level: -1}
                         that.options.push(oneoption)
                         let children = []
                         that.options=array2tree(res.data)
                         that.options.unshift(oneoption)
-                        console.log(that.tableData)
+                        //console.log(that.tableData)
                         let a =[]
-                        that.tableData.map(item=>{
-                             
-                                
-                        })
+                        // that.tableData.map(item=>{
+                        //
+                        //
+                        // })
+
                       
                     })
+
                 },
                 //显示表单
                 AddRoleFrom(){
