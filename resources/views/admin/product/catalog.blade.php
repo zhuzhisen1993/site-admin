@@ -37,11 +37,13 @@
                                         </el-table-column>
                                         <el-table-column
                                         label="name"
-                                        prop="name">
+                                        prop="catalogName"
+                                        width="200">
                                         </el-table-column>
                                         <el-table-column
                                         label="level"
-                                        prop="level">
+                                        prop="level"
+                                        width="80">
                                         </el-table-column>
                                         <el-table-column
                                         label="created_at"
@@ -83,7 +85,8 @@
                                                             <el-form-item label="类型级别" :label-width="formLabelWidth" prop="Actionsku">
                                                             <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="请输入内容"></el-input>
                                                             <div class="highlight" >
-                                                                  <el-tree  accordion transiton="fade" v-show="tree" :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                                                                  <el-tree  accordion transiton="fade" v-show="tree" 
+                                                                  node-key="id"  :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
                                                             </div>
                                                             </el-form-item>
                                                             <el-form-item label="类型名称" :label-width="formLabelWidth" prop="">
@@ -102,6 +105,12 @@
                                         </el-dialog>
                                         <el-dialog title="编辑级别" :visible.sync="dialogFormVisible">
                                         <el-form :model="fomedata">
+                                        <el-form-item label="类型级别" :label-width="formLabelWidth" prop="Actionsku">
+                                                            <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="请输入内容"></el-input>
+                                                            <div class="highlight" >
+                                                                  <el-tree  accordion transiton="fade" v-show="tree" :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                                                            </div>
+                                                            </el-form-item>
                                             <el-form-item label="级别名称" :label-width="formLabelWidth">
                                             <el-input v-model="fomedata.name" autocomplete="off"></el-input>
                                             </el-form-item>
@@ -113,54 +122,6 @@
                                         </el-dialog>
 </div>
 <script>
-
-
-
-
-
-    //递归数据。处理为树形结构
-
-       
-        // function getTree(array,pid = 0, level = 0){
-
-        //    const list = [];
-        //    array.forEach(function(res,index){
-        //        res1 = res
-        //        if(res.pid == pid){
-        //             //父节点为根节点的节点,级别为0，也就是第一级
-        //         res.level = level;
-        //         //把数组放到list中
-        //         list.push(res);
-        //         //把这个节点从数组中移除,减少后续递归消耗
-        //          array.splice(index,1)
-        //         //unset($array[$key]);
-        //         //开始递归,查找父ID为该节点ID的节点,级别则为原级别+1
-        //         getTree(array, res1.id, level+1);
-              
-        //        }
-        //    });
-        //    console.log(list);
-        //    return list;
-
-        // }
-
-        // const array1tree = (array,root = 0) => {
-        //     function setname(level=1) {
-        //         array.forEach(b => {
-        //             let  aname = ""
-        //             if(b.level == level){
-        //                 console.log(level)
-        //                 aname= aname+b.name
-        //                 b.cname = aname
-        //                 setname(level + 1);
-        //             }
-        //         });
-        //     }
-        //     return setname(root);
-        // }
-
-
-
          const array2tree = (array, pflag = "pid", sflag = "id", root = 0) => {
                             function cascader(pid, level = 1) {
                                 const target = [];
@@ -217,28 +178,33 @@
                     },
                     tableData: [],
                     catalogData:[],
-                    ids:"123",
-                    str:''
+                    ids:"",
+                    str:'',
+                    listData:[]
                }
             },
             methods:{
                 //保存编辑
                 editoption(){
+                    console.log(this.fomedata)
+                    let that = this
+                   
                     axios.post("productCatalog/"+this.ids+"/edit",{data:this.fomedata}).then(res=>{
                         this.dialogFormVisible = false
                         that.tableData.map(item=>{
-                            //console.log(item)
+                                console.log(res)
                             })
                         })
-                    //console.log(this.fomedata)
+                    console.log(this.fomedata)
                 },
                 //编辑操作
                 handleedit(inde,row){
+                    this.ids = row.id
+                     this.selectedOptions = row.catalogName
                     this.dialogFormVisible = true
                     this.fomedata.name=row.name
                     this.fomedata.pid=row.pid
-                    this.ids = row.id
-                    this.fomedata.level=row.level
+                   this.fomedata.level = row.level
                     this.fomedata.isshow=row.isshow
                 },
                 //禁用操作
@@ -279,7 +245,6 @@
                         });          
                     
                     })
-
                 },
                 //删除操作
                 handleDelete(index, row) {
@@ -317,11 +282,9 @@
                 },
                 handleNodeClick(data) {
                     this.str = '';
-
                     this.selectedOptions = this.ftree(data);
-
-                    console.log(this.selectedOptions);
-
+                    this.fomedata.level = data.level
+                    //console.log(this.selectedOptions);
 
                     //console.log(this.tableData);
                     // if(this.selectedOptions.indexOf(data.name)=="-1"){
@@ -330,6 +293,7 @@
                         //this.selectedOptions = data.name
                          this.form.id = data.id
                          this.form.level= data.level
+                         this.fomedata.level=data.level
                     // // }
                     //      this.form.id = data.id
                     //      this.form.level= data.level
@@ -337,12 +301,10 @@
                  },
                 ftree(data){
                     if(this.catalogData[data.pid] != undefined){
-                         this.str = this.catalogData[data.pid].name+'>>'+this.str
+                         this.str = this.catalogData[data.pid].name+' >> '+this.str
                         this.ftree(this.catalogData[data.pid])
                     }
-
                     return this.str+data.name;
-
                  },
                  showtree(){
                     this.tree= true
@@ -357,7 +319,9 @@
                     axios.get("productCatalog/getDate").then(function(res){
                          that.tableData=res.data
                          that.tableData.forEach(function (res,index) {
+                            that.str = ''
                             that.catalogData[res.id] = res
+                            res.catalogName = that.ftree(res);
                          })
                          let oneoption={name:"添加顶级",cname:"添加顶级",isshow: 1,level: -1}
                         that.options.push(oneoption)
@@ -370,8 +334,7 @@
                         //
                         //
                         // })
-
-                      
+                        console.log(that.tableData);
                     })
 
                 },
@@ -410,8 +373,14 @@
                         });
                         that.roleFrom=false
                         that.tableData.push(res.data.data)
+                        that.tableData.forEach(function (res,index) {
+                            that.str = ''
+                            that.catalogData[res.id] = res
+                            res.catalogName = that.ftree(res);
+                         })
                         that.options=array2tree(that.tableData)
                         that.options.unshift(oneoption)
+
                     })
                 },
             },
