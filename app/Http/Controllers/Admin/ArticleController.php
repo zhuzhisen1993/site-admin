@@ -15,12 +15,21 @@ class ArticleController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+
+    protected $nav_active;
+
+    public function __construct()
     {
-        return view('admin.articles.index');
+        $this->nav_active = 'Article';
     }
 
-    public function articleData(){
+    public function index()
+    {
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.articles.index',$data);
+    }
+
+    public function getData(){
         $data['article'] = Article::with('articleType')->get();
         $data['articleType'] = ArticleTpye::all();
 

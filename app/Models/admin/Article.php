@@ -8,7 +8,7 @@ use App\Models\admin\ArticleTpye;
 class Article extends Model
 {
     protected $fillable = [
-        'title','img_url','description','content','frequency'
+        'title','img_url','description','content','frequency','webtitle','webkeywords','webdescription'
     ];
     public function articleType(){
         $this->belongsTo(ArticleTpye::class,'id','article_type_id');

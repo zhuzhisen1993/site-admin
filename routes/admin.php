@@ -51,7 +51,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
 
         //文章管理
         route::get('article','ArticleController@index');
-        route::get('article/getDate','ArticleController@artilceData');
+        route::get('article/getData','ArticleController@getData');
         route::post('article/add','ArticleController@add');
         route::post('article/{article}/edit','ArticleController@edit');
         route::post('article/{article}/destory','ArticleController@destory');

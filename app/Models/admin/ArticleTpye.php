@@ -8,7 +8,7 @@ use App\Models\admin\Article;
 class ArticleTpye extends Model
 {
     protected $fillable = [
-        'title'
+        'title','webtitle','webkeywords','webdescription'
     ];
     protected $table = 'article_types';
 

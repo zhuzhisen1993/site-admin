@@ -17,8 +17,6 @@
 <div id="apps">
     <span @click="OpenArticle()" href="#" class="btn btn-primary margin-bottom"><i class="fa fa-paint-brush" style="margin-right: 6px;"></i>新增文章类型</span>
 
-
-
     <div class="box box-primary">
         <div class="box-header with-border">
             <h3 class="box-title">文章类型列表</h3>
@@ -72,10 +70,10 @@
                             <el-button
                                     size="mini"
                                     type="mini"
-                                    @click="openSaveArticleFrom(scope.row)">修改</el-button>
+                                    @click="openSaveArticleFrom(scope.row,scope.$index)">修改</el-button>
                             <el-button
                                     size="mini"
-                                    @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+                                    @click="deleteArticleType(scope.row,scope.$index)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -95,9 +93,18 @@
     </div>
 
 
-
     <el-dialog title="新增文章类型" :visible.sync="ArticlesFormVisible">
         <el-form :model="data">
+            <el-form-item label="网页标题" :label-width="formLabelWidth">
+                <el-input v-model="data.webtitle"></el-input>
+            </el-form-item>
+            <el-form-item label="网页关键字" :label-width="formLabelWidth">
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="data.webkeywords"></el-input>
+            </el-form-item>
+            <el-form-item label="网页描述" :label-width="formLabelWidth">
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="data.webdescription"></el-input>
+            </el-form-item>
+
             <el-form-item label="分类名称" :label-width="formLabelWidth">
                 <el-input v-model="data.title" autocomplete="off"></el-input>
             </el-form-item>
@@ -117,36 +124,78 @@
                 return {
                     ArticlesFormVisible: false,
                     data: {
+                        id:'',
                         title: '',
+                        webtitle:'',
+                        webkeywords:'',
+                        webdescription:''
                     },
                     formLabelWidth: '120px',
                     tableData: [],
                     search:"",
                     pagesize: 20,
                     currpage: 1,
+                    currentIndex:'',
                 }
             },
             methods:{
                 getData(){
                     var that = this
                     axios.get('/admin/articleTypes/getData').then(function (res) {
-                        console.log(res.data.data);
                         that.tableData = res.data.data
                     })
                 },
                 OpenArticle:function(){
+                     this.data.id =''
                      this.ArticlesFormVisible = true
+
+                     for(var key in this.data){
+                        this.data[key] = ''
+                     }
                 },
-                openSaveArticleFrom:function (row) {
+                openSaveArticleFrom:function (row,index) {
+                    this.currentIndex = index
                     this.ArticlesFormVisible = true
-                    this.data.title = row.title
+
+                    for(var key in this.data){
+                        this.data[key] = row[key]
+                    }
+
+                    // this.data.id = row.id
+                    // this.data.title = row.title
+                    // this.data.webtitle = row.webtitle
+                    // this.data.webkeywords = row.webkeywords
+                    // this.data.webdescription = row.webdescription
                 },
                 SubmitArticles:function(){
                     let that = this
-                    axios.post("/admin/articleTypes/add",{data:that.data}).then(function (res) {
-                        console.log(res);
-                        console.log('添加文章分类!');
-                    })
+                    if(this.data.id !=""){
+                        axios.post('/admin/articleTypes/'+this.data.id+'/edit',{data:that.data}).then(function (res) {
+                            if(res.data.msg == 'success'){
+                                that.$message({
+                                    type: 'success',
+                                    message: res.data.tips
+                                });
+                                that.tableData[that.currentIndex] = res.data.data
+                                that.ArticlesFormVisible = false
+                            }else{
+                                that.$message.error(res.data.tips);
+                            }
+                        })
+                    }else{
+                        axios.post("/admin/articleTypes/add",{data:that.data}).then(function (res) {
+                            if(res.data.msg == 'success'){
+                                that.$message({
+                                    type: 'success',
+                                    message: res.data.tips
+                                });
+                                that.tableData.push(res.data.data)
+                                that.ArticlesFormVisible = false
+                            }else{
+                                that.$message.error(res.data.tips);
+                            }
+                        })
+                    }
                 },
                 handleCurrentChange(cpage) {
                     this.currpage = cpage;
@@ -154,6 +203,31 @@
                 handleSizeChange(psize) {
                     this.pagesize = psize;
                 },
+                deleteArticleType:function (row,index) {
+                    let that = this
+
+                    this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.post('/admin/articleTypes/' + row.id + '/destroy', {data: that.data}).then(function (res) {
+                            if (res.data.msg == 'success') {
+                                that.$message({
+                                    type: 'success',
+                                    message: res.data.tips
+                                });
+                                that.ArticlesFormVisible = false
+                                that.tableData.splice(index, 1)
+                            }
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    })
+                }
             },
             created(){
                 this.getData();

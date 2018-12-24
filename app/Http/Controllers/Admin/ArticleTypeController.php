@@ -27,7 +27,10 @@ class ArticleTypeController extends Controller
 
     public function add(Request $request){
           $articleType = ArticleTpye::create([
-               'title'=>$request->input('data.title')
+               'title'=>$request->input('data.title'),
+               'webtitle'=>$request->input('data.webtitle'),
+               'webkeywords'=>$request->input('data.webkeywords'),
+               'webdescription'=>$request->input('data.webdescription')
           ]);
           return $this->response($articleType,'success','添加成功！');
     }
@@ -35,6 +38,9 @@ class ArticleTypeController extends Controller
     public function edit(Request $request,ArticleTpye $articleTpye){
         $articleTpyes = ArticleTpye::where('id',$articleTpye->id)->first();
         $articleTpyes->title = $request->input('data.title');
+        $articleTpyes->webtitle = $request->input('data.webtitle');
+        $articleTpyes->webkeywords = $request->input('data.webkeywords');
+        $articleTpyes->webdescription = $request->input('data.webdescription');
         $articleTpyes->save();
         return $this->response($articleTpyes,'success','修改成功！');
     }
