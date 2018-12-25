@@ -1,5 +1,11 @@
 @extends('admin.app')
 @section('content-header')
+    <script type="text/javascript" charset="utf-8" src="{{url('dist/js/neditor.config.js')}}"></script>
+    <script type="text/javascript" charset="utf-8" src=" {{url('dist/js/neditor.all.js')}}"> </script>
+    <script type="text/javascript" charset="utf-8" src="{{url('dist/js/neditor.service.js')}}"></script>
+    <script type="text/javascript" charset="utf-8" src="{{url('dist/js/i18n/zh-cn/zh-cn.js')}}"></script>
+    <script type="text/javascript" src="{{url('dist/js/third-party/browser-md5-file.min.js')}}"></script>
+    <script type="text/javascript" src="{{url('dist/js/third-party/jquery-1.10.2.min.js')}}"></script>
     <h1>
         文章管理
         <small>内容</small>
@@ -122,29 +128,51 @@
             <el-form-item label="文章名称" :label-width="formLabelWidth">
                 <el-input v-model="data.title" autocomplete="off"></el-input>
             </el-form-item>
+
+            <el-form-item label="文章图片" :label-width="formLabelWidth">
+                <el-upload
+                        class="avatar-uploader"
+                        action="/admin/upload"
+                        :headers="headers"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+            </el-form-item>
         </el-form>
+
         <div slot="footer" class="dialog-footer">
+            <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 0;">编辑内容</div>
+            <textarea id="editor" style="width:900px;height:500px;"></textarea>
             <el-button @click="ArticlesFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="SubmitArticles()">确 定</el-button>
         </div>
     </el-dialog>
 
-
-
-
-
-
-
-
     </div>
-</div>
+
 
     <script>
+        var ue = UE.getEditor('editor');
+        // //获取content 内容
+        // function getContent() {
+        //     var arr = [];
+        //     arr.push(UE.getEditor('editor').getContent());
+        //     return arr.join("\n");
+        // }
+
         new Vue({
             //delimiters: ['@{{', '}}'],
             el: '#apps',
             data() {
                 return {
+
+                    headers:{
+                        'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].getAttribute("content")
+                    },
+
                     ArticlesFormVisible: false,
                     data: {
                         id:'',
@@ -160,7 +188,8 @@
                     pagesize: 20,
                     currpage: 1,
                     currentIndex:'',
-                    ArticleTypeData:''
+                    ArticleTypeData:'',
+                    imageUrl:''
                 }
             },
             methods:{
@@ -254,13 +283,63 @@
                             message: '已取消删除'
                         });
                     })
-                }
+                },
+                //处理图片方法
+                handleAvatarSuccess(res, file, fileList) {
+                    this.imageUrl = res.path.replace('http://localhost',"")
+                },
+                beforeAvatarUpload(file) {
+                    const isJPG = file.type === 'image/jpeg';
+                    const isLt2M = file.size / 1024 / 1024 < 2;
+
+                    // if (!isJPG) {
+                    // this.$message.error('上传头像图片只能是 JPG 格式!');
+                    // }
+                    if (!isLt2M) {
+                        this.$message.error('上传头像图片大小不能超过 2MB!');
+                    }
+                    //return isJPG && isLt2M;
+                    return isLt2M;
+                },
             },
             created(){
                 this.getData();
             }
         })
     </script>
+
+<style>
+    .box{
+        padding-bottom: 40px;
+    }
+    input[type=file]{
+        display:none
+    }
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+    }
+    .avatar {
+        width: 100px;
+        height: 100px;
+        display: block;
+    }
+</style>
+
 
 @stop
 

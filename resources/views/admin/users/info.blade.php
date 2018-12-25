@@ -57,7 +57,7 @@
                     return {
                         headers:{
                         'X-CSRF-TOKEN': document.getElementsByTagName('meta')['csrf-token'].getAttribute("content")
-                    },
+                        },
                         ruleForm:{
                             name:'',
                             email:'',
