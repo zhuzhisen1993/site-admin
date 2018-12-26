@@ -161,6 +161,20 @@
             arr.push(UE.getEditor('editor').getContent());
             return arr.join("\n");
         }
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+         UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+         UE.Editor.prototype.getActionUrl = function(action) {
+             if (action == 'uploadimage' || action == 'uploadscrawl'|| action == 'uploadimage') {
+                 return 'http://laravel-cms.test/admin/upload';/*自定义上传action*/
+             } else if (action == 'uploadvideo') {
+                 return 'http://laravel-cms.test/admin/upload';
+             } else {
+                 console.log(11)
+                 return this._bkGetActionUrl.call(this, action);
+             }
+         }
+
+
         new Vue({
             //delimiters: ['@{{', '}}'],
             el: '#apps',

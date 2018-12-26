@@ -10,7 +10,7 @@ UE.Editor.prototype.getActionUrl = function(action) {
     if (action == 'uploadimage' || action == 'uploadscrawl') {
         return 'http://laravel-cms.test/admin/upload';
     } else if (action == 'uploadvideo') {
-        return 'http://laravel-cms.test/admin/upload';
+        return 'http://laravel-cms.test/admin/video';
     } else {
         return this._bkGetActionUrl.call(this, action);
     }
@@ -23,6 +23,7 @@ UE.Editor.prototype.getActionUrl = function(action) {
  * @returns imageUploadService 对象
  */
 window.UEDITOR_CONFIG['imageUploadService'] = function(context, editor) {
+   
     return {
         /** 
          * 触发fileQueued事件时执行
@@ -153,12 +154,12 @@ window.UEDITOR_CONFIG['scrawlUploadService'] = function(context, editor) {
             formData.append('file', file, file.name);
 
             $.ajax({
+                dataType:'json',
                 url: editor.getActionUrl(editor.getOpt('scrawlActionName')),
                 type: 'POST',
                 data: formData
             }).done(function(res) {
                 var res = JSON.parse(res);
-                
                 /* 上传接口返回的response成功状态条件 (比如: res.code == 200) */
                 res.responseSuccess = res.code == 200;
 
@@ -202,6 +203,8 @@ window.UEDITOR_CONFIG['fileUploadService'] = function(context, editor) {
          * @returns 上传参数对象
          */
         setFormData: function(object, data, headers) {
+            console.log(res)
+
             return data;
         },
         /**
@@ -211,6 +214,8 @@ window.UEDITOR_CONFIG['fileUploadService'] = function(context, editor) {
          * @returns uploader
          */
         setUploaderOptions: function(uploader) {
+            console.log(res)
+
             return uploader;
         },
         /**
@@ -220,6 +225,7 @@ window.UEDITOR_CONFIG['fileUploadService'] = function(context, editor) {
          * @returns {Boolean} 上传接口返回的response成功状态条件 (比如: res.code == 200)
          */
         getResponseSuccess: function(res) {
+            console.log(res)
             return res.code == 200;
         },
         /* 指定上传接口返回的response中附件路径的字段，默认为 url
