@@ -37,7 +37,11 @@ class ArticleController extends Controller
     }
 
     public function add(Request $request){
+
         $data = $request->input('data');
+        $data['article_type_id'] = $data['pid'];
+
+
         $result = array();
         if($request->all()){
             $article = Article::where(['article_type_id'=>$data['article_type_id'],'title'=>$data['title']])->first();
