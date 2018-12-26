@@ -56,6 +56,13 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('article/{article}/edit','ArticleController@edit');
         route::post('article/{article}/destory','ArticleController@destory');
 
+        //属性管理
+        route::get('option','OptionController@index');
+        route::get('option/getData','OptionController@getData');
+        route::post('option/add','OptionController@add');
+        route::post('option/{option}/edit','OptionController@edit');
+        route::post('option/{option}/destory','OptionController@destory');
+
 
 
         //产品类型管理

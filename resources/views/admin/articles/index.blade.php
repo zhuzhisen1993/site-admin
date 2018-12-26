@@ -156,12 +156,12 @@
 
     <script>
         var ue = UE.getEditor('editor');
-        // //获取content 内容
-        // function getContent() {
-        //     var arr = [];
-        //     arr.push(UE.getEditor('editor').getContent());
-        //     return arr.join("\n");
-        // }
+        //获取content 内容
+        function getContent() {
+            var arr = [];
+            arr.push(UE.getEditor('editor').getContent());
+            return arr.join("\n");
+        }
 
         new Vue({
             //delimiters: ['@{{', '}}'],
