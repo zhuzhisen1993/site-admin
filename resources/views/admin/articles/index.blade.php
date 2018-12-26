@@ -102,11 +102,7 @@
             </div>
         </div>
     </div>
-
-
-
-
-    <el-dialog title="新增文章" :visible.sync="ArticlesFormVisible">
+    <el-dialog :title="title" :visible.sync="ArticlesFormVisible">
         <el-form :model="data">
             <el-form-item label="网页标题" :label-width="formLabelWidth">
                 <el-input v-model="data.webtitle"></el-input>
@@ -118,7 +114,7 @@
                 <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="data.webdescription"></el-input>
             </el-form-item>
 
-
+            <div class="wenzhang" style="display:flex">
             <el-form-item label="文章分类" :label-width="formLabelWidth">
                 <el-select v-model="data.article_type_id" placeholder="请选择">
                     <el-option
@@ -129,11 +125,14 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-
+            <el-form-item label="网页头部显示" :label-width="formLabelWidth">
+            <el-radio v-model="data.top" label="1">是</el-radio>
+            <el-radio v-model="data.top" label="0">否</el-radio>
+            </el-form-item>
+            </div>
             <el-form-item label="文章名称" :label-width="formLabelWidth">
                 <el-input v-model="data.title" autocomplete="off"></el-input>
             </el-form-item>
-
             <el-form-item label="文章图片" :label-width="formLabelWidth">
                 <el-upload
                         class="avatar-uploader"
@@ -168,7 +167,6 @@
             arr.push(UE.getEditor('editor').getContent());
             return arr.join("\n");
         }
-
         new Vue({
             //delimiters: ['@{{', '}}'],
             el: '#apps',
@@ -188,7 +186,8 @@
                         webkeywords:'',
                         webdescription:'',
                         img_url:'',
-                        content:''
+                        content:'',
+                        top:"1"
                     },
                     formLabelWidth: '120px',
                     tableData: [],
@@ -197,6 +196,8 @@
                     currpage: 1,
                     currentIndex:'',
                     ArticleTypeData:'',
+                    imageUrl:'',
+                    title:"新增文章"
                 }
             },
             methods:{
@@ -220,13 +221,10 @@
 
                     this.currentIndex = index
                     this.ArticlesFormVisible = true
-
+                    this.title="修改文章"
                     for(var key in this.data){
                         this.data[key] = row[key]
                     }
-
-                    console.log(this.data);
-
                     // this.data.id = row.id
                     // this.data.title = row.title
                     // this.data.webtitle = row.webtitle
@@ -234,6 +232,7 @@
                     // this.data.webdescription = row.webdescription
                 },
                 SubmitArticles:function(){
+                    this.title="修改文章"
                     let that = this
                     if(this.data.id !=""){
                         axios.post('/admin/article/'+this.data.id+'/edit',{data:that.data}).then(function (res) {
@@ -320,6 +319,9 @@
     </script>
 
 <style>
+        label{
+            width:40px  
+        }
     .box{
         padding-bottom: 40px;
     }
