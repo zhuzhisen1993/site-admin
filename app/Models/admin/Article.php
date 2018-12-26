@@ -10,7 +10,7 @@ class Article extends Model
     protected $fillable = [
         'title','img_url','description','content','frequency','webtitle','webkeywords','webdescription'
     ];
-    public function articleType(){
-        $this->belongsTo(ArticleTpye::class,'id','article_type_id');
+    public function articletypes(){
+        return $this->belongsTo(ArticleTpye::class,'article_type_id','id');
     }
 }
