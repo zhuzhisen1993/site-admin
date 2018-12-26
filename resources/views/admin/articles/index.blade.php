@@ -161,7 +161,6 @@
             arr.push(UE.getEditor('editor').getContent());
             return arr.join("\n");
         }
-
         new Vue({
             //delimiters: ['@{{', '}}'],
             el: '#apps',

@@ -1,27 +1,27 @@
 @extends('admin.app')
 @section('content-header')
     <h1>
-        权限管理
-        <small>权限</small>
+        属性管理
+        <small>属性</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="{{url('/dashboard')}}"><i class="fa fa-dashboard"></i> 主页</a></li>
-        <li>权限管理</li>
-        <li class="active">权限</li>
+        <li>属性管理</li>
+        <li class="active">属性</li>
     </ol>
 @stop
 
 @section('content')
     <div id="apps">
-        <a class="btn btn-primary margin-bottom" @click="permissionAdd()"><i class="fa fa-paint-brush" style="margin-right: 6px"></i>新增权限</a>
+        <a class="btn btn-primary margin-bottom" @click="permissionAdd()"><i class="fa fa-paint-brush" style="margin-right: 6px"></i>新增属性</a>
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">权限列表</h3>
+                <h3 class="box-title">属性列表</h3>
                 <div class="box-tools">
                     <form action="" method="get">
                         <div class="input-group">
                             <input   v-model="search" type="text" class="form-control input-sm pull-right" name="s_title"
-                                   style="width: 150px;" placeholder="搜索权限标题">
+                                   style="width: 150px;" placeholder="搜索属性名称">
                             <div class="input-group-btn">
                                 <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
                             </div>
@@ -89,22 +89,10 @@
 
 
             <!-- Form -->
-            <el-dialog title="添加用户权限" :visible.sync="permissionAddFrom">
+            <el-dialog :title="title" :visible.sync="permissionAddFrom">
                 <el-form :model="form" :rules="rules" ref="permissionForm">
-                    <input type="hidden" v-model="form.id">
-                    <el-form-item label="控制器名称" :label-width="formLabelWidth" prop="ControllerName">
-                        <el-input v-model="form.ControllerName" autocomplete="off" placeholder="请输控制器名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="方法名称" :label-width="formLabelWidth" prop="ActionName">
-                        <el-input v-model="form.ActionName" autocomplete="off" placeholder="请输方法名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="描述" :label-width="formLabelWidth" prop="remarks">
-                        <el-input
-                                type="textarea"
-                                :autosize="{ minRows: 2, maxRows: 4}"
-                                placeholder="请输入备注名称"
-                                v-model="form.remarks">
-                        </el-input>
+                    <el-form-item label="方法属性名称" :label-width="formLabelWidth" prop="name">
+                        <el-input v-model="form.name" autocomplete="off" placeholder="请输方法名称"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -122,6 +110,7 @@
             el: '#apps',
             data() {
                 return {
+                  title:'添加商品属性',
                     fullscreenLoading: false,
                     pagesize: 20,
                     currpage: 1,
@@ -129,15 +118,13 @@
                     search: '',
                     permissionAddFrom: false,
                     form: {
-                        id:'',
-                        ControllerName: '',
-                        ActionName: '',
-                        remarks: '',
+                        name:"",
+
                     },
                     formLabelWidth: '120px',
                     rules: {
-                        ControllerName: [
-                            { required: true, message: '控制器名称不能为空！', trigger: 'blur' },
+                        name: [
+                            { required: true, message: '属性名称不能为空！', trigger: 'blur' },
                         ],
                         ActionName:[
                             {required:true,message:'方法名称不能为空！',trigger:'blur'}
