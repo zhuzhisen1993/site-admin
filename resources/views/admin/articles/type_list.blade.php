@@ -93,7 +93,7 @@
     </div>
 
 
-    <el-dialog title="新增文章类型" :visible.sync="ArticlesFormVisible">
+    <el-dialog :title="title" :visible.sync="ArticlesFormVisible">
         <el-form :model="data">
             <el-form-item label="网页标题" :label-width="formLabelWidth">
                 <el-input v-model="data.webtitle"></el-input>
@@ -136,6 +136,7 @@
                     pagesize: 20,
                     currpage: 1,
                     currentIndex:'',
+                    title:""
                 }
             },
             methods:{
@@ -146,6 +147,7 @@
                     })
                 },
                 OpenArticle:function(){
+                    this.title="新增文章类型"
                      this.data.id =''
                      this.ArticlesFormVisible = true
 
@@ -154,6 +156,7 @@
                      }
                 },
                 openSaveArticleFrom:function (row,index) {
+                    this.title="修改文章类型"
                     this.currentIndex = index
                     this.ArticlesFormVisible = true
 
