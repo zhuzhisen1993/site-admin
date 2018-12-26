@@ -83,14 +83,14 @@
                                     <el-dialog   :title="title" :visible.sync="roleFrom">
                                                         <el-form  :model="form" :rules="rules" ref="roleForm">
                                                             <el-form-item label="类型级别" :label-width="formLabelWidth" prop="Actionsku">
-                                                            <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="请输入内容"></el-input>
+                                                            <el-input  @focus="showtree()" v-model="selectedOptions" placeholder="点击选择内容。"></el-input>
                                                             <div class="highlight" >
                                                                   <el-tree  accordion transiton="fade" v-show="tree" 
                                                                   node-key="id"  :data="options" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
                                                             </div>
                                                             </el-form-item>
                                                             <el-form-item label="类型名称" :label-width="formLabelWidth" prop="">
-                                                            <el-input  @focus="hidetree()" v-model="form.name" placeholder="请输入内容"></el-input>
+                                                            <el-input  @focus="hidetree()" v-model="form.name" placeholder="请输入内容。"></el-input>
                                                             </el-form-item>
                                                             <el-form-item label="是否显示" :label-width="formLabelWidth" prop="">
                                                             <el-radio v-model="form.isshow" label="0">否</el-radio>
@@ -200,11 +200,11 @@
                 //编辑操作
                 handleedit(inde,row){
                     this.ids = row.id
-                     this.selectedOptions = row.catalogName
+                    this.selectedOptions = row.catalogName
                     this.dialogFormVisible = true
                     this.fomedata.name=row.name
                     this.fomedata.pid=row.pid
-                   this.fomedata.level = row.level
+                    this.fomedata.level = row.level
                     this.fomedata.isshow=row.isshow
                 },
                 //禁用操作

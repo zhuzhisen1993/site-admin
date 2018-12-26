@@ -203,6 +203,7 @@
                     <ul class="treeview-menu">
                         <li><a href="{{url('admin/productCatalog')}}"><i class="fa fa-circle-o"></i>产品类型</a></li>
                         <li><a href="{{url('admin/product')}}"><i class="fa fa-circle-o"></i>产品内容</a></li>
+                        <li><a href="{{url('admin/option')}}"><i class="fa fa-circle-o"></i>产品属性管理</a></li>
                     </ul>
                 </li>
 
