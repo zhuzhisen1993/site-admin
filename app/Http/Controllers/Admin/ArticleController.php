@@ -30,7 +30,9 @@ class ArticleController extends Controller
     }
 
     public function getData(){
-        $data['article'] = Article::with('articleType')->get();
+
+        $data['article'] = Article::with('articletypes')->get();
+
         $data['articleType'] = ArticleTpye::all();
 
         return $this->response($data,'success','数据请求成功！');
@@ -39,8 +41,8 @@ class ArticleController extends Controller
     public function add(Request $request){
 
         $data = $request->input('data');
-        $data['article_type_id'] = $data['pid'];
 
+        unset($data['id']);
 
         $result = array();
         if($request->all()){
@@ -55,6 +57,13 @@ class ArticleController extends Controller
             $tips = '提交的数据不能为空，请先填充数据！';
         }
         return $this->response($result,'success',$tips);
+    }
+
+    public function edit(Request $request,Article $article){
+        $data = $request->input('data');
+        unset($data['id']);
+        $refault = Article::where('id',$article->id)->update($data);
+        return $this->response($refault,'message','修改成功！');
     }
 
 

@@ -51,22 +51,27 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                            label="类型名称"
-                            width="180">
+                            label="类型名称">
+                        <template slot-scope="scope">
+                            <span>@{{ scope.row.articletypes.title }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            label="文章名称">
                         <template slot-scope="scope">
                             <span>@{{ scope.row.title }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                             label="创建时间"
-                    >
+                            width="180">
                         <template slot-scope="scope">
                             <span >@{{ scope.row.created_at }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
                             label="更新时间"
-                    >
+                            width="180">
                         <template slot-scope="scope">
                             <span>@{{ scope.row.updated_at }}</span>
                         </template>
@@ -111,7 +116,7 @@
 
             <div class="wenzhang" style="display:flex">
             <el-form-item label="文章分类" :label-width="formLabelWidth">
-                <el-select v-model="data.pid" placeholder="请选择">
+                <el-select v-model="data.article_type_id" placeholder="请选择">
                     <el-option
                             v-for="item in ArticleTypeData"
                             :key="item.id"
@@ -136,15 +141,16 @@
                         :show-file-list="false"
                         :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                    <img v-if="data.img_url" :src="data.img_url" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </el-form-item>
         </el-form>
 
         <div slot="footer" class="dialog-footer">
-            <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 0;">编辑内容</div>
-            <textarea id="editor" style="width:900px;height:500px;"></textarea>
+            <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 0;">文章内容</div>
+            <textarea id="editor" style="width:900px;height:500px;" v-model="data.content">{{data.content}}</textarea>
+            {{--<textarea id="editor" style="width:900px;height:500px;">@{{data.content}}</textarea>--}}
             <el-button @click="ArticlesFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="SubmitArticles()">确 定</el-button>
         </div>
@@ -188,11 +194,13 @@
                     ArticlesFormVisible: false,
                     data: {
                         id:'',
-                        pid:'',
+                        article_type_id:'',
                         title: '',
                         webtitle:'',
                         webkeywords:'',
                         webdescription:'',
+                        img_url:'',
+                        content:'',
                         top:"1"
                     },
                     formLabelWidth: '120px',
@@ -224,6 +232,7 @@
                     }
                 },
                 openSaveArticleFrom:function (row,index) {
+
                     this.currentIndex = index
                     this.ArticlesFormVisible = true
                     this.title="修改文章"
@@ -253,6 +262,7 @@
                             }
                         })
                     }else{
+                        this.data.content = getContent();
                         axios.post("/admin/article/add",{data:that.data}).then(function (res) {
                             if(res.data.msg == 'success'){
                                 that.$message({
@@ -300,7 +310,7 @@
                 },
                 //处理图片方法
                 handleAvatarSuccess(res, file, fileList) {
-                    this.imageUrl = res.path.replace('http://localhost',"")
+                    this.data.img_url = res.path.replace('http://localhost',"")
                 },
                 beforeAvatarUpload(file) {
                     const isJPG = file.type === 'image/jpeg';
