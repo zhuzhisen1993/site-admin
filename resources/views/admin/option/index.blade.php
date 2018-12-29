@@ -87,20 +87,21 @@
             <!-- Form -->
             <el-dialog :title="title" :visible.sync="permissionAddFrom">
                 <el-form :model="form" :rules="rules" ref="permissionForm">
-                    <el-form-item label="方法属性名称" :label-width="formLabelWidth" prop="name">
-                        <el-input v-model="form.name" autocomplete="off" placeholder="请输方法名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="展示类型" :label-width="formLabelWidth" prop="show">
-                    <el-select v-model="form.show" placeholder="请选择">
+                <el-form-item label="展示类型" :label-width="formLabelWidth" prop="show">
+                    <el-select v-model="form.option_type_id" placeholder="请选择">
                             <el-option
                             v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            :key="item.id"
+                            :label="item.type"
+                            :value="item.id">
                             </el-option>
                  </el-select>
                     </el-form-item>
-                    <el-form-item label="属性值" :label-width="formLabelWidth" max-height="250"  prop="">
+                    <el-form-item label="方法属性名称" :label-width="formLabelWidth" prop="name">
+                        <el-input v-model="form.title" autocomplete="off" placeholder="请输方法名称"></el-input>
+                    </el-form-item>
+                  
+                    <el-form-item label="属性值" v-if="eidtshow" :label-width="formLabelWidth" max-height="250"  prop="">
                                 <el-table
                                 border
                                 :data="list.filter(data => !searchs || data.name.toLowerCase().includes(this.searchs.toLowerCase()))"
@@ -150,7 +151,7 @@
                             </el-table>
                     </el-form-item>
                 </el-form>
-                <div class="listitem" >
+                <div class="listitem" v-if="eidtshow" >
                                 <span> 属性值名称</span>
                                 <input  ref="name" class="itemstyle" placeholder="请输入名称"/>
                                 <span style="margin-left:10px"> 价格</span>
@@ -186,27 +187,13 @@
                     searchs: '',
                     permissionAddFrom: false,
                     form: {
-                        name:"",
-                        show:"",
-                        list:[],
+                        title:"",
+                        option_type_id:"",
                     },
                     list:[{name: "1", price: "2", sku: "3", prices: "4"},{name: "2", price: "2", sku: "3", prices: "4"}],
                     result1:null,
-                    options:[
-                        {
-                            value: 'checkbox',
-                            label: '多选框'
-                        },
-                        {
-                            value: 'radio',
-                            label: '单选框'
-                        },
-                        {
-                            value: 'select',
-                            label: '选择器'
-                        },
-                    ],
-
+                    options:[ ],
+                    eidtshow:false,
                     formLabelWidth: '120px',
                     rules: {
                         name: [
@@ -252,10 +239,11 @@
                        
                     },
                 getData:function () {
-                    // let that = this
-                    // axios.get("/admin/permission/getData").then(function (res) {
-                    //     that.tableData = res.data
-                    // })
+                    let that = this
+                    axios.get("/admin/option/getData").then(function (res) {
+                        console.log(res);
+                        that.options = res.data.data.option_type
+                    })
                 },
                 permissionAdd:function(){
                     this.title="添加商品属性"
@@ -266,10 +254,17 @@
                         var that = this;
                         this.$refs[formName].validate((valid) => {
                             if (valid) {
-                                //  that.fullscreenLoading=true
-                                //  axios.post("/admin/permisssion/add",{
-                                //     data:this.form
-                                // }).then(function (res) {
+                                 that.fullscreenLoading=true
+                                 axios.post("/admin/option/add",{ data:this.form}).then(function (res){
+                                             if(res.data.msg == 'success'){
+                                                    that.$message({
+                                                        message: res.data.tips,
+                                                        type: 'success'
+                                                });
+                                        that.permissionAddFrom = false
+                                        console.log(res)
+                                 })
+                                
                                 //     that.fullscreenLoading=false
                                 //     if(res.data.msg == 'success'){
                                 //         that.$message({
