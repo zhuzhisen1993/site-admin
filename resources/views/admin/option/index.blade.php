@@ -34,20 +34,16 @@
                         :data="tableData.filter(data => !search || data.ActionName.toLowerCase().includes(search.toLowerCase()) || data.remarks.toLowerCase().includes(search.toLowerCase())|| data.ControllerName.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)"
                         style="width: 100%"  v-loading="loading">
                     <el-table-column
-                            label="name"
-                            prop="name">
+                            label="序号"
+                            prop="id">
                     </el-table-column>
                     <el-table-column
-                            label="控制器名称"
-                            prop="ControllerName">
+                            label="属性名称"
+                            prop="title">
                     </el-table-column>
                     <el-table-column
-                            label="方法名称"
-                            prop="ActionName">
-                    </el-table-column>
-                    <el-table-column
-                            label="权限名称"
-                            prop="remarks">
+                            label="类型"
+                            prop="option_type_name">
                     </el-table-column>
                     <el-table-column
                             label="创建时间"
@@ -87,7 +83,7 @@
             <!-- Form -->
             <el-dialog :title="title" :visible.sync="permissionAddFrom">
                 <el-form :model="form" :rules="rules" ref="permissionForm">
-                <el-form-item label="展示类型" :label-width="formLabelWidth" prop="show">
+                <el-form-item label="展示类型" :label-width="formLabelWidth" prop="option_type_id">
                     <el-select v-model="form.option_type_id" placeholder="请选择">
                             <el-option
                             v-for="item in options"
@@ -97,7 +93,7 @@
                             </el-option>
                  </el-select>
                     </el-form-item>
-                    <el-form-item label="方法属性名称" :label-width="formLabelWidth" prop="name">
+                    <el-form-item label="方法属性名称" :label-width="formLabelWidth" prop="title">
                         <el-input v-model="form.title" autocomplete="off" placeholder="请输方法名称"></el-input>
                     </el-form-item>
                   
@@ -196,10 +192,10 @@
                     eidtshow:false,
                     formLabelWidth: '120px',
                     rules: {
-                        name: [
+                        title: [
                             { required: true, message: '属性名称不能为空！', trigger: 'blur' },
                         ],
-                        show:[
+                        option_type_id:[
                             {required:true,message:'显示方式不能为空！',trigger:'blur'}
                         ],
                     },
@@ -243,6 +239,7 @@
                     axios.get("/admin/option/getData").then(function (res) {
                         console.log(res);
                         that.options = res.data.data.option_type
+                        that.tableData = res.data.data.option_catalog
                     })
                 },
                 permissionAdd:function(){
@@ -261,31 +258,13 @@
                                                         message: res.data.tips,
                                                         type: 'success'
                                                 });
-                                        that.permissionAddFrom = false
-                                        console.log(res)
+                                                that.permissionAddFrom = false
+                                                that.fullscreenLoading = false
+
+                                                console.log(res)
+                                                that.tableData.push(res.data.data)
+                                             }
                                  })
-                                
-                                //     that.fullscreenLoading=false
-                                //     if(res.data.msg == 'success'){
-                                //         that.$message({
-                                //             message: res.data.tips,
-                                //             type: 'success'
-                                //         });
-                                //         that.permissionAddFrom = false
-                                //         if(that.form.id){
-                                //             that.tableData = that.tableData.map(function (item) {
-                                //                 if(item.id == res.data.data.id){
-                                //                     item = res.data.data
-                                //                 }
-                                //                 return item;
-                                //             })
-                                //         }else{
-                                //             that.tableData.push(res.data.data)
-                                //         }
-                                //     }else{
-                                //         that.$message.error(res.data.tips);
-                                //     }
-                                // })
                                 console.log(this.form)
                             } else {
                                 console.log('error submit!!');
