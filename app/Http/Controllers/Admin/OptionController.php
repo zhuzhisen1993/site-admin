@@ -73,6 +73,7 @@ class OptionController extends Controller
                     'option_type_id'=>$data['option_type_id'],
                     'title' =>$data['title']
                 ]);
+        $optionCatalog->option_type = OptionType::where('id',$data['option_type_id'])->first();
         return $this->response($optionCatalog,'success','添加成功！');
     }
 
