@@ -12,7 +12,7 @@ class Option extends Model
     ];
 
     public function optionCatalog(){
-        return $this->belongsTo(OptionCatalog::class);
+        return $this->belongsTo(OptionCatalog::class,'option_catalog_id','id');
     }
 
 }

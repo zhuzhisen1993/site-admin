@@ -26,7 +26,7 @@ class OptionController extends Controller
 
     public function getData(){
         $data['option_type'] = OptionType::all();
-        $data['option_catalog'] = OptionCatalog::with('optionCatalog')->get();
+        $data['option_catalog'] = OptionCatalog::with('optionType')->get();
         return $this->response($data,'success','数据请求成功！');
     }
 
