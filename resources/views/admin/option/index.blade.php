@@ -43,7 +43,7 @@
                     </el-table-column>
                     <el-table-column
                             label="类型"
-                            prop="option_type_name">
+                            prop="option_type.type">
                     </el-table-column>
                     <el-table-column
                             label="创建时间"
@@ -186,7 +186,7 @@
                         title:"",
                         option_type_id:"",
                     },
-                    list:[{name: "1", price: "2", sku: "3", prices: "4"},{name: "2", price: "2", sku: "3", prices: "4"}],
+                    list:[],
                     result1:null,
                     options:[ ],
                     eidtshow:false,
@@ -243,6 +243,7 @@
                     })
                 },
                 permissionAdd:function(){
+                    this.eidtshow = false
                     this.title="添加商品属性"
                     // this.resetFrom();
                      this.permissionAddFrom = true
@@ -260,7 +261,6 @@
                                                 });
                                                 that.permissionAddFrom = false
                                                 that.fullscreenLoading = false
-
                                                 console.log(res)
                                                 that.tableData.push(res.data.data)
                                              }
@@ -270,42 +270,57 @@
                                 console.log('error submit!!');
                                 return false;
                             }
-                        });
+                        }
+                        );
                 },
                 handleEdit(index, row) {
-                    //  this.form.id = row.id,
-                    //  this.form.ControllerName = row.ControllerName,
-                    //  this.form.ActionName = row.ActionName,
-                    //  this.form.remarks =row.remarks,
-                    //  this.permissionAddFrom= true
+                        //  this.form.id = row.id,
+                        //  this.form.ControllerName = row.ControllerName,
+                        //  this.form.ActionName = row.ActionName,
+                        //  this.form.remarks =row.remarks,
+                        //  this.permissionAddFrom= true
+                        this.fullscreenLoading=true
+                        let that = this
+                        console.log(index, row)
+                        axios.post("/admin/option/"+row.id+"/getOption",{ data:this.form}).then(function (res){
+                            console.log(res)
+                            that.permissionAddFrom=true
+                            that.fullscreenLoading=false
+
+                            that.eidtshow = true
+                            that.options = res.data.list
+                            
+                        })
+
                 },
                 handleDelete(index, row) {
-                    // this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                    //     confirmButtonText: '确定',
-                    //     cancelButtonText: '取消',
-                    //     type: 'warning'
-                    // }).then(() => {
-                    //     this.fullscreenLoading=true
-                    //     let that = this
-                    //     axios.post('/admin/permission/'+row.id+'/destroy').then(function (res) {
-                    //         that.fullscreenLoading=false
-                    //         if(res.data == 'success'){
-                    //             that.tableData = that.tableData.filter(item=>{
-                    //                 return item.id != row.id
-                    //             })
-                    //         }
-                    //         that.$message({
-                    //             type: 'success',
-                    //             message: '删除成功!'
-                    //         });
-                    //     })
+                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.fullscreenLoading=true
+                        let that = this
+                        axios.post('/admin/option/'+row.id+'/destroy').then(function (res) {
+                            console.log(res)
+                            that.fullscreenLoading=false
+                            if(res.data == 'success'){
+                                that.tableData = that.tableData.filter(item=>{
+                                    return item.id != row.id
+                                })
+                            }
+                            that.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                        })
 
-                    // }).catch(() => {
-                    //     this.$message({
-                    //         type: 'info',
-                    //         message: '已取消删除'
-                    //     });
-                    // })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    })
                 },
                 resetlistitem() {
                     this.$refs.name.value=""
