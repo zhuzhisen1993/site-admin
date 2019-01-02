@@ -135,7 +135,7 @@
                                     </template>
                                     <template slot-scope="scope">
                                     <el-button
-                                    @click.native.prevent="deleteRow(scope.$index, list)"
+                                    @click.native.prevent="deleteRow(scope.$index, list,scope.row)"
                                     type="text"
                                     size="small">移除 </el-button>
                                     <el-button
@@ -157,7 +157,7 @@
                                 <input ref="sku" class="itemstyle" placeholder="请输入内容"/>
                                 <span style="margin-left:10px"> 价格2</span>
                                 <input ref="prices"  class="itemstyle" placeholder="请输入内容"/>
-                                <el-button @click="addlist" type="primary" class="addlist" >确认添加属性值</el-button>
+                                <el-button @click="addlist" type="primary" class="addlist" >@{{controller}}</el-button>
                 </div>
                 <div slot="footer" class="dialog-footer"style="margin-top: 60px;" >
                     <el-button @click="permissionAddFrom = false">取 消</el-button>
@@ -174,6 +174,7 @@
             el: '#apps',
             data() {
                 return {
+                controller:"确认添加属性",
                   title:'',
                     fullscreenLoading: false,
                     pagesize: 20,
@@ -187,8 +188,10 @@
                         option_type_id:"",
                     },
                     list:[],
+                    editindex:"",
                     result1:null,
                     options:[ ],
+                    isedit: false,
                     eidtshow:false,
                     formLabelWidth: '120px',
                     rules: {
@@ -204,10 +207,17 @@
             },
             methods:{
                     //删除本行属性值
-                    deleteRow(index, rows) {
+                    deleteRow(index, rows,row) {
+                        console.log(rows)
                         rows.splice(index, 1);
+                        console.log(row)
+                        axios.post("option/"+ row+"/destory").then(res=>{
+                            console.log(res)
+                        })                   
                     },
                     editRow(index, row){
+                        this.isedit= true
+                        this.editindex = index
                         this.$refs.name.value=row.name
                         this.$refs.price.value=row.price
                         this.$refs.prices.value=row.prices
@@ -216,10 +226,11 @@
                     //添加一行属性
                     addlist(){
                         let list = {}
-                            list.name   =  this.$refs.name.value
-                            list.price  =  this.$refs.price.value
-                            list.sku    =  this.$refs.sku.value
-                            list.prices =  this.$refs.prices.value
+                        let that = this
+                        list.name   =  this.$refs.name.value
+                        list.price  =  this.$refs.price.value
+                        list.sku    =  this.$refs.sku.value
+                        list.prices =  this.$refs.prices.value
                             for(key in list){
                                 if(list[key]===""||list[key]===null){
                                     this.$message({
@@ -229,10 +240,25 @@
                                 return
                                 }
                             }
-                            this.form.list.push(list)
-                            this.list.push(list)
-                            this.resetlistitem()
-                       
+                            if(this.isedit===true){
+                                this.controller="确认修改属性"
+                                this.resetlistitem()
+                                axios.post("/option/edit",list).then(res=>{
+                                console.log(res)
+                                that.list[this.editindex]=list
+                                that.controller="确认修改属性"
+                                that.resetlistitem()
+                                that.isedit=false
+                                })
+                            }else{
+                                this.controller="确认添加属性"
+                                axios.post("/option/add",list).then(res=>{
+                                console.log(res)
+                                that.list.push(list)
+                                that.resetlistitem()
+                                })
+                            }
+                           
                     },
                 getData:function () {
                     let that = this
@@ -252,7 +278,8 @@
                         var that = this;
                         this.$refs[formName].validate((valid) => {
                             if (valid) {
-                                 that.fullscreenLoading=true
+                                if(this.eidtshow==false){
+                                    that.fullscreenLoading=true
                                  axios.post("/admin/option/add",{ data:this.form}).then(function (res){
                                              if(res.data.msg == 'success'){
                                                     that.$message({
@@ -261,35 +288,37 @@
                                                 });
                                                 that.permissionAddFrom = false
                                                 that.fullscreenLoading = false
-                                                console.log(res)
+                                                //console.log(res)
                                                 that.tableData.push(res.data.data)
                                              }
                                  })
-                                console.log(this.form)
+                                //console.log(this.form)
+                                }else{
+                                    console.log(111)
+                                }
+                               
                             } else {
-                                console.log('error submit!!');
+                                //console.log('error submit!!');
                                 return false;
                             }
                         }
                         );
                 },
                 handleEdit(index, row) {
-                        //  this.form.id = row.id,
-                        //  this.form.ControllerName = row.ControllerName,
+                        console.log(row)
+                        this.form.option_type_id = row.option_type_id,
+                         this.form.title = row.title,
                         //  this.form.ActionName = row.ActionName,
                         //  this.form.remarks =row.remarks,
                         //  this.permissionAddFrom= true
                         this.fullscreenLoading=true
                         let that = this
-                        console.log(index, row)
+                       //console.log(index, row)
                         axios.post("/admin/option/"+row.id+"/getOption",{ data:this.form}).then(function (res){
-                            console.log(res)
                             that.permissionAddFrom=true
                             that.fullscreenLoading=false
-
                             that.eidtshow = true
-                            that.options = res.data.list
-                            
+                            that.list = res.data.list
                         })
 
                 },
@@ -302,7 +331,7 @@
                         this.fullscreenLoading=true
                         let that = this
                         axios.post('/admin/option/'+row.id+'/destroy').then(function (res) {
-                            console.log(res)
+                            //console.log(res)
                             that.fullscreenLoading=false
                             if(res.data == 'success'){
                                 that.tableData = that.tableData.filter(item=>{
@@ -370,8 +399,8 @@
         float: right;
     }
     .itemstyle{
-        width:200px;
-        -webkit-appearance: none;
+    width:200px;
+    -webkit-appearance: none;
     background-color: #fff;
     background-image: none;
     border-radius: 4px;
@@ -403,9 +432,6 @@
     .addlist span{
         padding:0
     }
-
-   
-    
     </style>
 @stop
 
