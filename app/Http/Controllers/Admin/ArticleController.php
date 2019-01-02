@@ -38,33 +38,51 @@ class ArticleController extends Controller
         return $this->response($data,'success','数据请求成功！');
     }
 
+    public function addOptionCatalog(Request $request){
+        $data = $request->input('data');
+        $optionCatalog = OptionCatalog::create([
+            'option_type_id'=>$data['option_type_id'],
+            'title'=>$data['title']]);
+            return $this->response($optionCatalog,'success','添加成功！');
+    }
+
+
     public function add(Request $request){
-
         $data = $request->input('data');
-
-        unset($data['id']);
-
-        $result = array();
-        if($request->all()){
-            $article = Article::where(['article_type_id'=>$data['article_type_id'],'title'=>$data['title']])->first();
-            if(!$article){
-                $result = Article::insert($data);
-                $tips = '内容添加成功！';
-            }else{
-                $tips = '该数据已经存在请勿重复操作！';
-            }
-        }else{
-            $tips = '提交的数据不能为空，请先填充数据！';
-        }
-        return $this->response($result,'success',$tips);
+        $option = Option::create([
+            'option_catalog_id' =>$data['option_catalog_id'],
+            'title' =>$data['title']
+        ]);
+        return $this->response($option,'success','添加成功！');
     }
 
-    public function edit(Request $request,Article $article){
+
+    public function edit(Option $option,Request $request){
         $data = $request->input('data');
-        unset($data['id']);
-        $refault = Article::where('id',$article->id)->update($data);
-        return $this->response($refault,'message','修改成功！');
+        $options = Option::where('id',$option->id)->update([
+            'title' => $data['title']
+        ]);
+
+        return $this->response($options,'success','修改成功！');
     }
+
+    public function destory(Option $option){
+        Option::deleted();
+        return $this->response([],'success','删除成功！');
+    }
+
+    public function editOptionCatalog(Request $request,OptionType $optionType){
+        $data = $request->input('data');
+        $optionTypes = OptionCatalog::where('id',$optionType->id)->update([
+            'title' => $data['title']
+        ]);
+        return $this->response($optionTypes,'success','修改成功！');
+    }
+
+
+
+
+
 
 
     public function destroy()

@@ -149,7 +149,7 @@
 
         <div slot="footer" class="dialog-footer">
             <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 0;">文章内容</div>
-            <textarea id="editor" style="width:900px;height:500px;" v-model="data.content">{{data.content}}</textarea>
+            <textarea id="editor" style="width:900px;height:500px;" ></textarea>
             {{--<textarea id="editor" style="width:900px;height:500px;">@{{data.content}}</textarea>--}}
             <el-button @click="ArticlesFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="SubmitArticles()">确 定</el-button>
@@ -167,7 +167,7 @@
             arr.push(UE.getEditor('editor').getContent());
             return arr.join("\n");
         }
-        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
          UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
          UE.Editor.prototype.getActionUrl = function(action) {
              if (action == 'uploadimage' || action == 'uploadscrawl'|| action == 'uploadimage') {
