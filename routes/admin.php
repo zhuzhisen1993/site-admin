@@ -77,8 +77,10 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::get('option','OptionController@index');
         route::get('option/getData','OptionController@getData');
         route::post('option/{optionCatalog}/getOption','OptionController@getOption');
+        route::post('optionCatalog/add','OptionController@addOptionCatalog');
+        route::post('optionCatalog/edit','OptionController@editOptionCatalog');
         route::post('option/add','OptionController@add');
-        route::post('option/edit','OptionController@edit');
+        route::post('optionCatalog/edit','OptionController@edit');
         route::post('option/{option}/destory','OptionController@destory');
 
 
