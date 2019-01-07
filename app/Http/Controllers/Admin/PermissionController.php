@@ -8,10 +8,19 @@ use App\Models\admin\Permission;
 
 class PermissionController extends Controller
 {
+    protected $nav_active;
+
+    public function __construct()
+    {
+        $this->nav_active = 'User';
+    }
+
     public function index(){
-        $permission = Permission::query();
-        $permissions = $permission->paginate();
-        return view('admin.permission.index',compact('permissions'));
+//        $permission = Permission::query();
+//        $permissions = $permission->paginate();
+//        return view('admin.permission.index',compact('permissions'));
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.permission.index',$data);
     }
 
     public function getData(){

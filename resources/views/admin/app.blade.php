@@ -162,7 +162,7 @@
                     </a>
                 </li>
 
-                <li class="treeview" @if($nav_active == 'User') active @endif>
+                <li class="treeview @if($nav_active == 'User') active @endif">
                     <a href="#">
                         <i class="fa fa-user"></i>
                         <span>用户管理</span>

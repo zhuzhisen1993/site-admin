@@ -176,7 +176,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
         Stevenyangecho\UEditor\UEditorServiceProvider::class,
 
     ],
@@ -227,7 +226,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'UEditor'=>Stevenyangecho\UEditor\UEditorServiceProvider::class
+        'UEditor'=>Stevenyangecho\UEditor\UEditorServiceProvider::class,
     ],
 
 ];
