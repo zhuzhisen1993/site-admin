@@ -216,6 +216,7 @@
                         })                   
                     },
                     editRow(index, row){
+                        this.controller="确认修改属性"
                         this.isedit= true
                         this.editindex = index
                         this.$refs.name.value=row.name
@@ -241,17 +242,15 @@
                                 }
                             }
                             if(this.isedit===true){
-                                this.controller="确认修改属性"
                                 this.resetlistitem()
                                 axios.post("/option/edit",list).then(res=>{
                                 console.log(res)
                                 that.list[this.editindex]=list
-                                that.controller="确认修改属性"
+                                that.controller="确认添加属性"
                                 that.resetlistitem()
                                 that.isedit=false
                                 })
                             }else{
-                                this.controller="确认添加属性"
                                 axios.post("/option/add",list).then(res=>{
                                 console.log(res)
                                 that.list.push(list)
@@ -305,12 +304,9 @@
                         );
                 },
                 handleEdit(index, row) {
-                        console.log(row)
+                        //console.log(row)
                         this.form.option_type_id = row.option_type_id,
-                         this.form.title = row.title,
-                        //  this.form.ActionName = row.ActionName,
-                        //  this.form.remarks =row.remarks,
-                        //  this.permissionAddFrom= true
+                        this.form.title = row.title,
                         this.fullscreenLoading=true
                         let that = this
                        //console.log(index, row)
