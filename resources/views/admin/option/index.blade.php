@@ -104,25 +104,30 @@
                                 stripe
                                 style="width: 100%"
                                 max-height="250">
+
                                 <el-table-column
-                                prop="name"
-                                label="属性值名称"
+                                prop="title"
+                                label="属性值名称">
+                                 </el-table-column>
+
+                                <el-table-column
+                                        prop="sku"
+                                        label="sku">
+                                </el-table-column>
+
+                                </el-table-column>
+                                <el-table-column
+                                prop="created_at"
+                                label="添加时间"
                                >
                                 </el-table-column>
+
                                 <el-table-column
-                                prop="price"
-                                label="price"
+                                prop="updated_at"
+                                label="修改时间"
                                >
                                 </el-table-column>
-                                <el-table-column
-                                prop="prices"
-                                label="prices"
-                               >
-                                </el-table-column>
-                                <el-table-column
-                                prop="sku"
-                                label="sku">
-                                </el-table-column>
+
                                 <el-table-column
                                     fixed="right"
                                     label="操作"
@@ -150,13 +155,8 @@
                 <div class="listitem" v-if="eidtshow" >
                                 <span> 属性值名称</span>
                                 <input  ref="name" class="itemstyle" placeholder="请输入名称"/>
-                                <span style="margin-left:10px"> 价格</span>
-                                <input ref="price"  class="itemstyle" placeholder="请输入价格"/>
-                                <br>
                                 <span> sku</span>
                                 <input ref="sku" class="itemstyle" placeholder="请输入内容"/>
-                                <span style="margin-left:10px"> 价格2</span>
-                                <input ref="prices"  class="itemstyle" placeholder="请输入内容"/>
                                 <el-button @click="addlist" type="primary" class="addlist" >@{{controller}}</el-button>
                 </div>
                 <div slot="footer" class="dialog-footer"style="margin-top: 60px;" >
@@ -174,7 +174,7 @@
             el: '#apps',
             data() {
                 return {
-                controller:"确认添加属性",
+                controller:"添加属性",
                   title:'',
                     fullscreenLoading: false,
                     pagesize: 20,
@@ -202,36 +202,45 @@
                             {required:true,message:'显示方式不能为空！',trigger:'blur'}
                         ],
                     },
-                    loading: false
+                    loading: false,
+                    option_catalog_id :'',
+                    id:'',
                 }
             },
             methods:{
                     //删除本行属性值
                     deleteRow(index, rows,row) {
-                        console.log(rows)
-                        rows.splice(index, 1);
-                        console.log(row)
-                        axios.post("option/"+ row+"/destory").then(res=>{
-                            console.log(res)
+                        axios.post("option/"+ row.id+"/destory").then(res=>{
+                            if(res.data.msg == "success"){
+                                rows.splice(index, 1);
+                                that.$message({
+                                    message: res.data.tips,
+                                    type: 'success'
+                                })
+                            }else{
+                                that.$message({
+                                    message: res.data.tips,
+                                    type: 'error'
+                                })
+                            }
                         })                   
                     },
                     editRow(index, row){
-                        this.controller="确认修改属性"
+                        this.controller="修改属性"
+                        this.id = row.id
                         this.isedit= true
                         this.editindex = index
-                        this.$refs.name.value=row.name
-                        this.$refs.price.value=row.price
-                        this.$refs.prices.value=row.prices
+                        this.$refs.name.value=row.title
                         this.$refs.sku.value=row.sku
                     },
                     //添加一行属性
                     addlist(){
                         let list = {}
                         let that = this
-                        list.name   =  this.$refs.name.value
-                        list.price  =  this.$refs.price.value
+                        list.title   =  this.$refs.name.value
+                        list.option_catalog_id  =  this.option_catalog_id
                         list.sku    =  this.$refs.sku.value
-                        list.prices =  this.$refs.prices.value
+
                             for(key in list){
                                 if(list[key]===""||list[key]===null){
                                     this.$message({
@@ -243,18 +252,16 @@
                             }
                             if(this.isedit===true){
                                 this.resetlistitem()
-                                axios.post("/option/edit",list).then(res=>{
-                                console.log(res)
+                                axios.post("/admin/option/"+this.id+"/edit",list).then(res=>{
                                 that.list[this.editindex]=list
                                 that.controller="确认添加属性"
                                 that.resetlistitem()
                                 that.isedit=false
                                 })
                             }else{
-                                axios.post("/option/add",list).then(res=>{
-                                console.log(res)
-                                that.list.push(list)
-                                that.resetlistitem()
+                                axios.post("/admin/option/add",list).then(res=>{
+                                    that.list.push(res.data.data)
+                                    that.resetlistitem()
                                 })
                             }
                            
@@ -308,13 +315,14 @@
                         this.form.option_type_id = row.option_type_id,
                         this.form.title = row.title,
                         this.fullscreenLoading=true
+                        this.option_catalog_id = row.id
                         let that = this
                        //console.log(index, row)
                         axios.post("/admin/option/"+row.id+"/getOption",{ data:this.form}).then(function (res){
                             that.permissionAddFrom=true
                             that.fullscreenLoading=false
                             that.eidtshow = true
-                            that.list = res.data.list
+                            that.list = res.data.data
                         })
 
                 },
@@ -349,9 +357,7 @@
                 },
                 resetlistitem() {
                     this.$refs.name.value=""
-                     this.$refs.price.value=""
-                     this.$refs.sku.value=""
-                    this.$refs.prices.value=""
+                    this.$refs.sku.value=""
                 },
                 handleCurrentChange(cpage) {
                     this.currpage = cpage;

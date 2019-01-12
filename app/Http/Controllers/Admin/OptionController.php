@@ -35,38 +35,6 @@ class OptionController extends Controller
         return $this->response($data,'success','请求成功！');
     }
 
-//    public function edit(Request $request){
-//        $data = $request->input('data');
-//        $option = Option::all();
-//
-//        DB::transaction(function () use($option,$data) {
-//            $optionCatalog = OptionCatalog::where('id', $data['id'])->update([
-//                    'option_type_id' => $data['option_type_id'],
-//                    'title' => $data['title']
-//                ]
-//            );
-//            foreach ($option as $val) {
-//                $options[$val->id] = $val;
-//            }
-//            if ($data['option']) {
-//                foreach ($data['option'] as $val) {
-//                    if (isset($options[$val->id])) {
-//                        Option::where('id', $val->id)->update([
-//                            'title' => $val->title
-//                        ]);
-//                    } else {
-//                        Option::create(['title' => $val->title]);
-//                    }
-//                }
-//            }
-//            return $this->response($optionCatalog, 'success', '操作成功!');
-//        });
-//
-//        return $this->response(array(), 'success', '修改失败!');
-//
-//    }
-
-
     public function addOptionCatalog(Request $request){
         $data = $request->input('data');
         $optionCatalog = OptionCatalog::create([
@@ -78,26 +46,18 @@ class OptionController extends Controller
     }
 
     public function add(Request $request){
-        $data = $request->input('data');
-        $option = Option::create([
-            'option_catalog_id' =>$data['option_catalog_id'],
-            'title' =>$data['title']
-        ]);
+        $option = Option::create($request->all());
         return $this->response($option,'success','添加成功！');
     }
 
 
     public function edit(Option $option,Request $request){
-        $data = $request->input('data');
-        $options = Option::where('id',$option->id)->update([
-            'title' => $data['title']
-        ]);
-
-        return $this->response($options,'success','修改成功！');
+        $options = $option->update($request->all());
+        return $this->response($option,'success','修改成功！');
     }
 
     public function destory(Option $option){
-        Option::deleted();
+        $option->delete();
         return $this->response([],'success','删除成功！');
     }
 

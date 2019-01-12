@@ -80,7 +80,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('optionCatalog/add','OptionController@addOptionCatalog');//属性类型添加
         route::post('optionCatalog/edit','OptionController@editOptionCatalog');//属性类型编辑
         route::post('option/add','OptionController@add');//属性添加
-        route::post('option/edit','OptionController@edit');//属性编辑
+        route::post('option/{option}/edit','OptionController@edit');//属性编辑
         route::post('option/{option}/destory','OptionController@destory');//删除属性
 
 

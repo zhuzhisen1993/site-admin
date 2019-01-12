@@ -38,51 +38,21 @@ class ArticleController extends Controller
         return $this->response($data,'success','数据请求成功！');
     }
 
-    public function addOptionCatalog(Request $request){
-        $data = $request->input('data');
-        $optionCatalog = OptionCatalog::create([
-            'option_type_id'=>$data['option_type_id'],
-            'title'=>$data['title']]);
-            return $this->response($optionCatalog,'success','添加成功！');
-    }
 
 
     public function add(Request $request){
         $data = $request->input('data');
-        $option = Option::create([
-            'option_catalog_id' =>$data['option_catalog_id'],
-            'title' =>$data['title']
-        ]);
+        $option = Article::create($data);
         return $this->response($option,'success','添加成功！');
     }
 
 
-    public function edit(Option $option,Request $request){
+    public function edit(Article $article,Request $request){
         $data = $request->input('data');
-        $options = Option::where('id',$option->id)->update([
-            'title' => $data['title']
-        ]);
+        $articles = Article::where('id',$article->id)->update($data);
 
-        return $this->response($options,'success','修改成功！');
+        return $this->response($articles,'success','修改成功！');
     }
-
-    public function destory(Option $option){
-        Option::deleted();
-        return $this->response([],'success','删除成功！');
-    }
-
-    public function editOptionCatalog(Request $request,OptionType $optionType){
-        $data = $request->input('data');
-        $optionTypes = OptionCatalog::where('id',$optionType->id)->update([
-            'title' => $data['title']
-        ]);
-        return $this->response($optionTypes,'success','修改成功！');
-    }
-
-
-
-
-
 
 
     public function destroy()

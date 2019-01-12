@@ -42,6 +42,10 @@
 */
 require __DIR__ . '/admin.php';
 
+Route::any('laravel-u-editor-server/server',function(){
+
+});
+
 Route::any('{all}', function () {
     return view('layouts/index');
 })->where(['all'=>'.*']);

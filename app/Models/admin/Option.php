@@ -8,7 +8,7 @@ use App\Models\admin\OptionCatalog;
 class Option extends Model
 {
     protected $fillable = [
-         'option_catalog_id','title'
+         'option_catalog_id','title','sku'
     ];
 
     public function optionCatalog(){

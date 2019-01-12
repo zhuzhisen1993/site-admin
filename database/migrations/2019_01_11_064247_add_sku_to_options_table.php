@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddWebtitleArticles extends Migration
+class AddSkuToOptionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddWebtitleArticles extends Migration
      */
     public function up()
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->string('webtitle');
-            $table->text('webkeywords');
-            $table->text('webdescription');
+        Schema::table('options', function (Blueprint $table) {
+            $table->string('sku');
         });
     }
 
@@ -27,8 +25,8 @@ class AddWebtitleArticles extends Migration
      */
     public function down()
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->dropColumn("articles");
+        Schema::table('options', function (Blueprint $table) {
+            $table->dropColumn('options');
         });
     }
 }
