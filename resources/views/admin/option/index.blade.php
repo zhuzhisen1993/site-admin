@@ -31,7 +31,7 @@
             </div>
             <template>
                 <el-table
-                        :data="tableData.filter(data => !search || data.ActionName.toLowerCase().includes(search.toLowerCase()) || data.remarks.toLowerCase().includes(search.toLowerCase())|| data.ControllerName.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)"
+                        :data="tableData.filter(data => !search || data.title.toLowerCase().includes(search.toLowerCase()) || data.id.toLowerCase().includes(search.toLowerCase())|| data.ControllerName.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)"
                         style="width: 100%"  v-loading="loading">
                     <el-table-column
                             label="序号"
@@ -100,7 +100,7 @@
                     <el-form-item label="属性值" v-if="eidtshow" :label-width="formLabelWidth" max-height="250"  prop="">
                                 <el-table
                                 border
-                                :data="list.filter(data => !searchs || data.name.toLowerCase().includes(this.searchs.toLowerCase()))"
+                                :data="list.filter(data => !searchs || data.sku.toLowerCase().includes(this.searchs.toLowerCase()))"
                                 stripe
                                 style="width: 100%"
                                 max-height="250">
@@ -152,12 +152,16 @@
                             </el-table>
                     </el-form-item>
                 </el-form>
-                <div class="listitem" v-if="eidtshow" >
+                <div class="listitem"  v-if="eidtshow" >
+                            <div style="text-align: center;">
                                 <span> 属性值名称</span>
                                 <input  ref="name" class="itemstyle" placeholder="请输入名称"/>
+                            </div>
+                            <div style="text-align: center;">
                                 <span> sku</span>
                                 <input ref="sku" class="itemstyle" placeholder="请输入内容"/>
-                                <el-button @click="addlist" type="primary" class="addlist" >@{{controller}}</el-button>
+                            </div>
+                            <el-button @click="addlist" type="primary" class="addlist" >@{{controller}}</el-button>
                 </div>
                 <div slot="footer" class="dialog-footer"style="margin-top: 60px;" >
                     <el-button @click="permissionAddFrom = false">取 消</el-button>
@@ -210,20 +214,32 @@
             methods:{
                     //删除本行属性值
                     deleteRow(index, rows,row) {
-                        axios.post("option/"+ row.id+"/destory").then(res=>{
-                            if(res.data.msg == "success"){
-                                rows.splice(index, 1);
-                                that.$message({
-                                    message: res.data.tips,
-                                    type: 'success'
-                                })
-                            }else{
-                                that.$message({
-                                    message: res.data.tips,
-                                    type: 'error'
-                                })
-                            }
-                        })                   
+                        let that = this
+                        this.$confirm('此操作将永久删除该条, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                            }).then(() => {
+                                axios.post("option/"+row.id+"/destory").then(res=>{
+                                    if(res.data.msg == "success"){
+                                        rows.splice(index, 1);
+                                        that.$message({
+                                            message: res.data.tips,
+                                            type: 'success'
+                                        })
+                                    }else{
+                                        that.$message({
+                                            message: res.data.tips,
+                                            type: 'error'
+                                        })
+                                    }
+                                })       
+                            }).catch(() => {
+                                this.$message({
+                                    type: 'info',
+                                    message: '已取消删除'
+                                });
+                            })
                     },
                     editRow(index, row){
                         this.controller="修改属性"
@@ -250,11 +266,23 @@
                                 return
                                 }
                             }
+                           // console.log(list.sku.length) 
+                            if(list.sku.length<6){
+                                this.$message({
+                                    type: 'error',
+                                    message: 'sku不能小于6位且必须为数字!'
+                                });
+                                return
+                            }
                             if(this.isedit===true){
                                 this.resetlistitem()
                                 axios.post("/admin/option/"+this.id+"/edit",list).then(res=>{
-                                that.list[this.editindex]=list
-                                that.controller="确认添加属性"
+                                that.$message({
+                                type: 'success',
+                                message: '修改成功!'
+                                });
+                                that.list[this.editindex]=res.data.data
+                                that.controller="添加属性"
                                 that.resetlistitem()
                                 that.isedit=false
                                 })
@@ -262,6 +290,10 @@
                                 axios.post("/admin/option/add",list).then(res=>{
                                     that.list.push(res.data.data)
                                     that.resetlistitem()
+                                    that.$message({
+                                        type: 'success',
+                                        message: '添加成功!'
+                                    });
                                 })
                             }
                            
@@ -269,7 +301,7 @@
                 getData:function () {
                     let that = this
                     axios.get("/admin/option/getData").then(function (res) {
-                        console.log(res);
+                       // console.log(res);
                         that.options = res.data.data.option_type
                         that.tableData = res.data.data.option_catalog
                     })
@@ -286,7 +318,7 @@
                             if (valid) {
                                 if(this.eidtshow==false){
                                     that.fullscreenLoading=true
-                                 axios.post("/admin/option/add",{ data:this.form}).then(function (res){
+                                     axios.post("/admin/option/add",{ data:this.form}).then(function (res){
                                              if(res.data.msg == 'success'){
                                                     that.$message({
                                                         message: res.data.tips,
@@ -401,7 +433,7 @@
         float: right;
     }
     .itemstyle{
-    width:200px;
+    width:300px;
     -webkit-appearance: none;
     background-color: #fff;
     background-image: none;
