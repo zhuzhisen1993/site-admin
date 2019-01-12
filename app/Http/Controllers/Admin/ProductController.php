@@ -30,19 +30,7 @@ class ProductController extends Controller
     public  function add(Request $request){
         $data = $request->input('data');
         if($data){
-           $product = Product::create([
-                'catalog_id' =>$data['catalog_id'],
-                'price' => $data['price'],
-                'name' =>$data['name'],
-                'model' =>$data['model'],
-                'sku' => $data['sku'],
-                'describe' =>$data['describe'],
-                'content' =>$data['content'],
-                'isshow' =>1,
-                'photo' =>$data['photo'],
-                'num' =>$data['num'],
-                'sort' =>$data['sort']
-            ]);
+           $product = Product::create($request->all());
             return $this->response($product,'success','添加成功！');
         }else{
             return $this->response([],'error','提交内容不正确！');
@@ -51,22 +39,8 @@ class ProductController extends Controller
     }
 
     public function edit(Product $product,Request $request){
-        $data = $request->input('data');
-        $products = $product->update([
-            'catalog_id' =>$data['catalog_id'],
-            'price' => $data['price'],
-            'name' =>$data['name'],
-            'model' =>$data['model'],
-            'sku' => $data['sku'],
-            'describe' =>$data['describe'],
-            'content' =>$data['content'],
-            'isshow' =>1,
-            'photo' =>$data['photo'],
-            'num' =>$data['num'],
-            'sort' =>$data['sort']
-        ]);
-
-        return $this->response($products,'success','修改成功！');
+        $products = $product->update($request->all());
+        return $this->response($product,'success','修改成功！');
     }
 
     public  function destory(Product $product,Request $request){

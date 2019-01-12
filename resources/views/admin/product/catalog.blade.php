@@ -284,20 +284,11 @@
                     this.str = '';
                     this.selectedOptions = this.ftree(data);
                     this.fomedata.level = data.level
-                    //console.log(this.selectedOptions);
 
-                    //console.log(this.tableData);
-                    // if(this.selectedOptions.indexOf(data.name)=="-1"){
-                    //     this.selectedOptions = this.selectedOptions+data.name
-                    // }else{
-                        //this.selectedOptions = data.name
-                         this.form.id = data.id
-                         this.form.level= data.level
-                         this.fomedata.level=data.level
-                    // // }
-                    //      this.form.id = data.id
-                    //      this.form.level= data.level
-
+					this.form.id = data.id
+					this.form.level= data.level
+					this.fomedata.level=data.level
+				
                  },
                 ftree(data){
                     if(this.catalogData[data.pid] != undefined){
@@ -328,13 +319,8 @@
                         let children = []
                         that.options=array2tree(res.data)
                         that.options.unshift(oneoption)
-                        //console.log(that.tableData)
                         let a =[]
-                        // that.tableData.map(item=>{
-                        //
-                        //
-                        // })
-                        console.log(that.tableData);
+          
                     })
 
                 },

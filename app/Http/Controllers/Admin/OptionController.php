@@ -16,7 +16,7 @@ class OptionController extends Controller
 
     public function __construct()
     {
-        $this->nav_active = 'Option';
+        $this->nav_active = 'Product';
     }
 
     public function index(){
@@ -68,35 +68,5 @@ class OptionController extends Controller
         ]);
         return $this->response($optionTypes,'success','修改成功！');
     }
-
-
-//    public function add(Request $request){
-//
-//        $data = $request->input('data');
-//
-//        DB::transaction(function() use ($data){
-//            $optionCatalog = OptionCatalog::create([
-//                    'option_type_id'=>$data['option_type_id'],
-//                    'title' =>$data['title']
-//                ]
-//            );
-//
-//            if($data['option']){
-//                foreach ($data['option'] as $val){
-//                    Option::create([
-//                            'title'=>$val->title,
-//                            'option_catalog_id'=> $optionCatalog->id
-//                        ]
-//                    );
-//                }
-//            }
-//            return $this->response($optionCatalog,'success','添加成功！');
-//        });
-//
-//
-//        return $this->response(array(), 'success', '添加失败!');
-//
-//
-//    }
 
 }
