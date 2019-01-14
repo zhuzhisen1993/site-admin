@@ -28,8 +28,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $collects = $this->admin->dashboard_init_data();
-        return view('admin.dashboard.index', compact('collects'));
+        $data['collects'] = $this->admin->dashboard_init_data();
+        $data['nav_active'] = '';
+        return view('admin.dashboard.index',$data);
     }
 
 

@@ -73,12 +73,21 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('product/{productCatalog}/destory','ProductController@destory');
 
 
+
+        //产品属性管理
+        route::get('product','ProductOptionController@index');
+//        route::get('product/getDate','ProductController@getData');
+//        route::post('product/add','ProductController@add');
+//        route::post('product/{productCatalog}/edit','ProductController@edit');
+//        route::post('product/{productCatalog}/destory','ProductController@destory');
+
+
         //属性管理
         route::get('option','OptionController@index');
         route::get('option/getData','OptionController@getData');
         route::post('option/{optionCatalog}/getOption','OptionController@getOption');//获取当前属性类型下的属性
         route::post('optionCatalog/add','OptionController@addOptionCatalog');//属性类型添加
-        route::post('optionCatalog/edit','OptionController@editOptionCatalog');//属性类型编辑
+        route::post('optionCatalog/{optionCatalog}/edit','OptionController@editOptionCatalog');//属性类型编辑
         route::post('option/add','OptionController@add');//属性添加
         route::post('option/{option}/edit','OptionController@edit');//属性编辑
         route::post('option/{option}/destory','OptionController@destory');//删除属性

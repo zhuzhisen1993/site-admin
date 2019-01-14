@@ -1,10 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="container">
+    <div style="margin:0 auto;width:100%;">
+         <div class="container" style="position:relative;margin-top:16vh;">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default" style="-moz-box-shadow:0px 0px 4px #d3e0e9; -webkit-box-shadow:0px 0px 4px #d3e0e9; box-shadow:0px 0px 4px #d3e0e9;">
                     <div class="panel-heading">Admin Login</div>
                     <div class="panel-body">
                         <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/login') }}">
@@ -60,5 +61,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection

@@ -61,12 +61,9 @@ class OptionController extends Controller
         return $this->response([],'success','删除成功！');
     }
 
-    public function editOptionCatalog(Request $request,OptionType $optionType){
-        $data = $request->input('data');
-        $optionTypes = OptionCatalog::where('id',$optionType->id)->update([
-            'title' => $data['title']
-        ]);
-        return $this->response($optionTypes,'success','修改成功！');
+    public function editOptionCatalog(Request $request,OptionType $optionCatalog){
+        $optionCatalogs = $optionCatalog->update($request->all());
+        return $this->response($optionCatalog,'success','修改成功！');
     }
 
 }
