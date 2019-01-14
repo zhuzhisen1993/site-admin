@@ -75,7 +75,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
 
 
         //产品属性管理
-        route::get('product','ProductOptionController@index');
+        route::get('productOption','ProductOptionController@index');
 //        route::get('product/getDate','ProductController@getData');
 //        route::post('product/add','ProductController@add');
 //        route::post('product/{productCatalog}/edit','ProductController@edit');
