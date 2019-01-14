@@ -61,12 +61,22 @@
             }
         },
          methods:{
+              getData(){
+                  let that=this
+                  let level=0
+                  axios.get("/admin/productOption/getDate").then(function(res){
+                      console.log(res);
+                  })
+              },
               Addfrom(){
                     this.ProductOptionForm = true
               },
              SubmitFrom(formName){
 
              }
+        },
+        mounted(){
+            this.getData();
         }
     })
     </script>

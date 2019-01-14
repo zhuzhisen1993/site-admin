@@ -255,10 +255,6 @@
                         let content =  getContent()
                         this.$refs[formName].validate((valid) => {
                             if(valid){
-                                console.log(this.form)
-                                console.log(content)
-                                console.log(this.fileList)
-
 
                             }
                         })
