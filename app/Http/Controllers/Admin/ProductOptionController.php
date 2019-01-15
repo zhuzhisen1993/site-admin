@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\admin\ProductOption;
 
+
 class ProductOptionController extends Controller
 {
     protected $nav_active;
@@ -20,6 +21,7 @@ class ProductOptionController extends Controller
 
     public function getData(){
         $data['ProductOption'] = ProductOption::all();
+        $data['product'] = Product::all();
         return $this->response($data,'success','获取成功！');
     }
 

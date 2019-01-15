@@ -76,10 +76,14 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
 
         //产品属性管理
         route::get('productOption','ProductOptionController@index');
-//        route::get('product/getDate','ProductController@getData');
+        route::get('productOption/getDate','productOptionController@getData');
 //        route::post('product/add','ProductController@add');
 //        route::post('product/{productCatalog}/edit','ProductController@edit');
 //        route::post('product/{productCatalog}/destory','ProductController@destory');
+
+
+        //站点管理
+        route::get('Site/setting','SsettingController@index');
 
 
         //属性管理
@@ -91,8 +95,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
         route::post('option/add','OptionController@add');//属性添加
         route::post('option/{option}/edit','OptionController@edit');//属性编辑
         route::post('option/{option}/destory','OptionController@destory');//删除属性
-
-
 
 
         Route::get('profile','AdminController@adminInfo');//管理员资料
