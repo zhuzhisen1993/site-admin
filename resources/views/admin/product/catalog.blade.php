@@ -27,8 +27,25 @@
 @section('content')
 <div id="apps">
 <a @click="AddRoleFrom()" class="btn btn-primary margin-bottom"><i class="fa fa-paint-brush" style="margin-right: 6px"></i>新增类型</a>
+                <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">属性列表</h3>
+                                <div class="box-tools">
+                                    <form action="" method="get">
+                                        <div class="input-group">
+                                            <input   v-model="search" type="text" class="form-control input-sm pull-right" name="s_title"
+                                                style="width: 150px;" placeholder="搜索属性名称">
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                    </div>
+
                                     <el-table
-                                        :data="tableData"
+                                        :data="tableData.filter(data => !search || data.catalogName.toLowerCase().includes(search.toLowerCase())).slice((currpage - 1) * pagesize, currpage * pagesize)"
                                         style="width: 100%">
                                         <el-table-column
                                         label=""
@@ -36,21 +53,26 @@
                                         width="40">
                                         </el-table-column>
                                         <el-table-column
-                                        label="name"
+                                        label="ID"
+                                        prop="id"
+                                        width="40">
+                                        </el-table-column>
+                                        <el-table-column
+                                        label="名称"
                                         prop="catalogName"
-                                        width="200">
+                                        width=>
                                         </el-table-column>
                                         <el-table-column
-                                        label="level"
+                                        label="级别"
                                         prop="level"
-                                        width="80">
+                                        width=>
                                         </el-table-column>
                                         <el-table-column
-                                        label="created_at"
+                                        label="创建时间"
                                         prop="created_at">
                                         </el-table-column>
                                         <el-table-column
-                                        label="updated_at"
+                                        label="更新时间"
                                         prop="updated_at">
                                         </el-table-column>
                                         <el-table-column
@@ -79,6 +101,19 @@
                                         </template>
                                         </el-table-column>
                                     </el-table>
+
+
+                                    <div style="text-align: center;padding:10px 0px;">
+                                        <el-pagination
+                                                @size-change="handleSizeChange"
+                                                @current-change="handleCurrentChange"
+                                                :current-page="currpage"
+                                                :page-sizes="[20, 30, 40, 50]"
+                                                :page-size="pagesize"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="tableData.length">
+                                        </el-pagination>
+                                    </div>
 
                                     <el-dialog   :title="title" :visible.sync="roleFrom">
                                                         <el-form  :model="form" :rules="rules" ref="roleForm">
@@ -151,7 +186,8 @@
                             { required: true, message: '类型不能为空！', trigger: 'blur' },
                         ]
                     },
-                    
+                    pagesize: 20,
+                    currpage: 1,
                     dialogFormVisible:false,
                     tree:false,
                     formLabelWidth:'120px',
@@ -180,7 +216,8 @@
                     catalogData:[],
                     ids:"",
                     str:'',
-                    listData:[]
+                    listData:[],
+                    search:""
                }
             },
             methods:{
@@ -369,6 +406,12 @@
 
                     })
                 },
+                 handleCurrentChange(cpage) {
+                    this.currpage = cpage;
+                },
+                handleSizeChange(psize) {
+                    this.pagesize = psize;
+                }
             },
             mounted(){
                 this.getdata()
@@ -377,6 +420,13 @@
     </script>
     
     <style scoped>
+    .box-header {
+    color: #444;
+    display: block;
+    padding: 10px;
+    margin-bottom: -21px;
+    position: relative;
+}
         .block{
             display:inline-block
         }

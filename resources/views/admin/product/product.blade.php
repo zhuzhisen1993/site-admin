@@ -24,20 +24,33 @@
                 <el-table
                     :data="tableData"
                     style="width: 100%">
-                    <el-table-column
-                        prop="date"
-                        label="日期"
-                        width="250">
-                    </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        label="姓名"
-                        width="250">
-                    </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        label="地址">
-                    </el-table-column>
+                    <el-table-column label=""
+                            prop=""
+                            width="40">
+                            </el-table-column>
+                            <el-table-column
+                            label="ID"
+                            prop="id"
+                            width="40">
+                            </el-table-column>
+                            <el-table-column
+                            label="名称"
+                            prop="catalogName"
+                            width=>
+                            </el-table-column>
+                            <el-table-column
+                            label="级别"
+                            prop="level"
+                            width=>
+                            </el-table-column>
+                            <el-table-column
+                            label="创建时间"
+                            prop="created_at">
+                            </el-table-column>
+                            <el-table-column
+                            label="更新时间"
+                            prop="updated_at">
+                            </el-table-column>
                     <el-table-column  label="操作" width="200" fixed="right" >
                     <template slot-scope="scope"  >
                         <el-button
@@ -53,77 +66,85 @@
         
         <el-dialog  custom-class="loadings"  :title="title" :visible.sync="roleFrom">
                         <el-form style="margin-left:75px" ref="roleForm" :model="form" :rules="rules" ref="roleForm">
-							
-                            <el-form-item label="网站标题">
-                                <el-input  v-model="form.webtitle"   placeholder="请输入网站标题"></el-input>
-                            </el-form-item>
-							
-                            <el-form-item label="网站内容">
-                                <el-input  v-model="form.webkeywords"    placeholder="请输入网站内容"></el-input>
-                            </el-form-item>
-							
-                            <el-form-item label="网站描述">
-                                <el-input  v-model="form.webdescription" type="textarea"  placeholder="请输入网站描述"></el-input>
-                            </el-form-item>
-							
-                            <div style="display:flex" class="nemes">
-								
-								<el-form-item label="名称"  prop="name">
-									<el-input  v-model="form.name"  placeholder="请输入名称"></el-input>
-								</el-form-item>
-								
-								<el-form-item label="类型"  prop="catalog">
-									  <el-select v-model="catalog_id" filterable placeholder="请选择分类">
-										<el-option
-										  v-for="item in tableData"
-										  :key="item.id"
-										  :label="item.catalogName"
-										  :value="item.id">
-										</el-option>
-									  </el-select>
-								</el-form-item>
-								
-								<el-form-item label="型号"  prop="model">
-								   <el-input  v-model="form.model"  placeholder="请输入型号"></el-input>
-								</el-form-item>
-                            </div>
-							
-                            <div style="display:flex" class="prices">
-								<el-form-item label="价格"  prop="price">
-									 <el-input  v-model.number="form.price"   placeholder="请输入价格"></el-input>
-								</el-form-item>
-								<el-form-item label="数量"  prop="num">
-									<el-input  v-model.number="form.num"  placeholder="请输入数量"></el-input>
-								</el-form-item>
-								<el-form-item label="SKU"  prop="sku">
-									<el-input  v-model.number="form.sku"  placeholder="请输入SKU"></el-input>
-								</el-form-item>
-                            </div>
-                            
-                            <el-form-item label="描述" style="margin-top:15px" >
-                                <el-input  type="textarea" v-model="form.describe"  placeholder="请添加描述"></el-input>
-                            </el-form-item>
-							
-							<div>
-                                <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 15px;">上传photo</div>
-								<el-upload
-									action="https://jsonplaceholder.typicode.com/posts/"
-									list-type="picture-card"
-									:on-preview="handlePictureCardPreview"
-									:on-success="successupload"
-									:on-remove="handleRemove">
-									<i class="el-icon-plus"></i>
-								</el-upload>
-								<el-dialog :visible.sync="dialogVisible">
-									<img width="100%" :src="dialogImageUrl" alt="">
-								</el-dialog>
-                            </div>
+                        <template>
+                                <el-tabs v-model="activeName" @tab-click="tableedit">
+                                    <el-tab-pane label="商品编辑" name="first">
+                                    <el-form-item label="描述" style="margin-top:15px" >
+                                                                        <el-input  type="textarea" v-model="form.describe"  placeholder="请添加描述"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="网站标题">
+                                                    <el-input  v-model="form.webtitle"   placeholder="请输入网站标题"></el-input>
+                                                    </el-form-item>
+                                                    
+                                                    <el-form-item label="网站内容">
+                                                        <el-input  v-model="form.webkeywords"    placeholder="请输入网站内容"></el-input>
+                                                    </el-form-item>
+                                                    
+                                                    <el-form-item label="网站描述">
+                                                        <el-input  v-model="form.webdescription" type="textarea"  placeholder="请输入网站描述"></el-input>
+                                                    </el-form-item>
+                                    <div style="display:flex" class="prices">
+                                                        <el-form-item label="名称"  prop="name">
+                                                            <el-input  v-model="form.name"  placeholder="请输入名称"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="类型"  prop="catalog">
+                                                            <el-select v-model="catalog_id" filterable placeholder="请选择分类">
+                                                                <el-option
+                                                                v-for="item in tableData"
+                                                                :key="item.id"
+                                                                :label="item.catalogName"
+                                                                :value="item.id">
+                                                                </el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                        <el-form-item label="型号"  prop="model">
+                                                        <el-input  v-model="form.model"  placeholder="请输入型号"></el-input>
+                                                        </el-form-item>
+                                                    </div>
+                                                    
+                                                    <div style="display:flex" class="prices">
+                                                        <el-form-item label="价格"  prop="price">
+                                                            <el-input  v-model.number="form.price"   placeholder="请输入价格"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="数量"  prop="num">
+                                                            <el-input  v-model.number="form.num"  placeholder="请输入数量"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="SKU"  prop="sku">
+                                                            <el-input  v-model.number="form.sku"  placeholder="请输入SKU"></el-input>
+                                                        </el-form-item>
+                                                    </div>
+                                              
+                                    </el-tab-pane>
+                            <el-tab-pane label="内容编辑" name="third">
+                                            <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 0;">编辑内容</div>
+                                            <textarea id="editor" type="text/plain" style="width:900px;height:500px;"></textarea></el-tab-pane>
+                             </el-tab-pane>
+                             <el-tab-pane label="图片编辑" name="fourth">
+                             	
+                                                    <div>
+                                                        <div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 15px;">上传photo</div>
+                                                        <el-upload
+                                                            action="https://jsonplaceholder.typicode.com/posts/"
+                                                            list-type="picture-card"
+                                                            :on-preview="handlePictureCardPreview"
+                                                            :on-success="successupload"
+                                                            :on-remove="handleRemove">
+                                                            <i class="el-icon-plus"></i>
+                                                        </el-upload>
+                                                        <el-dialog :visible.sync="dialogVisible">
+                                                            <img width="100%" :src="dialogImageUrl" alt="">
+                                                        </el-dialog>
+                                                    </div>
+                             </el-tab-pane>
+                                </el-tabs>
+                        </template>
 
+
+
+                    
                         </el-form> 
 						
 						 <div slot="footer" class="dialog-footer">
-								<div style="text-align: left;font-size: 14px; color: #606266; line-height: 40px;font-weight: 900;padding: 0 12px 0 0;">编辑内容</div>
-								<textarea id="editor" type="text/plain" style="width:900px;height:500px;"></textarea>
 								<el-button @click="roleFrom = false" style="margin-top:20px;">取 消</el-button>
 								<el-button type="primary" style="margin-top:20px;" @click="SubmitFrom('roleForm')">确 定</el-button>
 						</div>
@@ -143,6 +164,7 @@
                     el: '#apps',
                     data() {
                         return {
+                            activeName: 'first',
                             dialogImageUrl: '',
                             dialogVisible: false,
                             roleFrom:true,
@@ -201,22 +223,24 @@
                     }
                     },
                     methods:{
-                        handleEdit(index, row) {
-                            console.log(index, row);
+                        tableedit(tab, event) {
+                            // console.log(tab, event);
                         },
-                        handleDelete(index, row) {
-                            console.log(index, row);
+                        handleEdit(index, row) {
+                            this.roleFrom = true
+                            this.form = row
+                            console.log(row);
                         },
                         successupload(response, file, fileList){
-                            console.log(fileList)
+                            //console.log(fileList)
                             this.fileList=filelist
                         },
                         handleRemove(file, fileList) {
-                            console.log(file, fileList);
+                            //console.log(file, fileList);
                             this.fileList=fileList
                         },
                         handlePictureCardPreview(file) {
-                            console.log(file)
+                           // console.log(file)
                             this.dialogImageUrl = file.url;
                             this.dialogVisible = true;
                         },
@@ -228,14 +252,12 @@
 								that.tableData=res.data
 								
                                 that.tableData.forEach(function (res,index) {
-									console.log(index);
+									//console.log(index);
                                    that.str = ''
                                    that.catalogData[res.id] = res
                                    res.catalogName = that.ftree(res)
                                 })
-								
 								console.log(that.catalogData);
-								
                             })
 						
                         },
@@ -263,7 +285,39 @@
                             }
                         })
 
-                        }
+                        },
+                        handleDelete(index,row) {
+                            let that = this
+                            let statemessage="删除本条"
+                            this.$confirm(`此操作将${statemessage}, 是否继续?`, '提示', {
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(() => {
+                            //     axios.post("productCatalog/"+row.id+"/destory").then(res=>{
+                            //     if(res.data.msg=="success"){
+                                    that.$message({
+                                    type: 'success',
+                                    message: '删除成功'
+                                })  
+                                that.tableData.map(item=>{
+                                    that.tableData = that.tableData.filter(item=>{
+                                            return item.id != row.id
+                                    })
+                                })
+                        
+                            //     }
+                            // })  
+                            }).catch(() => {
+                                that.$message({
+                                    type: 'info',
+                                    message: '已取消'
+                                });          
+                            })
+                        
+                            
+                            
+                        },
 
                     },
                     mounted(){

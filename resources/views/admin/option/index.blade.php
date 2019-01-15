@@ -162,6 +162,8 @@
                                 <input ref="sku" class="itemstyle" placeholder="请输入内容"/>
                             </div>
                             <el-button @click="addlist" type="primary" class="addlist" >@{{controller}}</el-button>
+                            <el-button @click="backedits" v-if="backedit" type="default" class="addlist" >取消</el-button>
+
                 </div>
                 <div slot="footer" class="dialog-footer"style="margin-top: 60px;" >
                     <el-button @click="permissionAddFrom = false">取 消</el-button>
@@ -178,6 +180,7 @@
             el: '#apps',
             data() {
                 return {
+                    backedit:false,
                 controller:"添加属性",
                   title:'',
                     fullscreenLoading: false,
@@ -209,6 +212,7 @@
                     loading: false,
                     option_catalog_id :'',
                     id:'',
+                    formid:"",
                 }
             },
             methods:{
@@ -242,12 +246,22 @@
                             })
                     },
                     editRow(index, row){
+                        this.backedit=true
                         this.controller="修改属性"
                         this.id = row.id
+                        //console.log(this.id)
                         this.isedit= true
                         this.editindex = index
                         this.$refs.name.value=row.title
                         this.$refs.sku.value=row.sku
+                    },
+                    backedits(){
+                        this.backedit=false
+                        this.controller="添加属性"
+                        this.$refs.name.value=""
+                        this.$refs.sku.value=""
+                        this.isedit= false
+
                     },
                     //添加一行属性
                     addlist(){
@@ -266,7 +280,7 @@
                                 return
                                 }
                             }
-                           // console.log(list.sku.length) 
+                            //console.log(list.sku.length) 
                             if(list.sku.length<6){
                                 this.$message({
                                     type: 'error',
@@ -281,6 +295,7 @@
                                 type: 'success',
                                 message: '修改成功!'
                                 });
+                                that.backedit=false
                                 that.list[this.editindex]=res.data.data
                                 that.controller="添加属性"
                                 that.resetlistitem()
@@ -317,8 +332,9 @@
                         this.$refs[formName].validate((valid) => {
                             if (valid) {
                                 if(this.eidtshow==false){
+                                    //添加
                                     that.fullscreenLoading=true
-                                     axios.post("/admin/option/add",{ data:this.form}).then(function (res){
+                                     axios.post("/admin/option/add",{data:this.form}).then(function (res){
                                              if(res.data.msg == 'success'){
                                                     that.$message({
                                                         message: res.data.tips,
@@ -332,7 +348,20 @@
                                  })
                                 //console.log(this.form)
                                 }else{
-                                    console.log(111)
+                                //编辑
+                                that.fullscreenLoading=true
+                                   axios.post("optionCatalog/"+this.formid +"/edit",this.form).then(function (res){
+                                             if(res.data.msg == 'success'){
+                                                    that.$message({
+                                                        message: res.data.tips,
+                                                        type: 'success'
+                                                });
+                                                that.permissionAddFrom = false
+                                                that.fullscreenLoading = false
+                                                console.log(res)
+                                                
+                                             }
+                                 })
                                 }
                                
                             } else {
@@ -343,8 +372,8 @@
                         );
                 },
                 handleEdit(index, row) {
-                        //console.log(row)
                         this.form.option_type_id = row.option_type_id,
+                        this.formid = row.id,
                         this.form.title = row.title,
                         this.fullscreenLoading=true
                         this.option_catalog_id = row.id
