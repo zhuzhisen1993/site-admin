@@ -16,6 +16,9 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin'], function () {
     Route::group(['middleware' => ['auth.admin','permission']], function () {
         Route::get('/', 'AdminController@index'); //后台首页
 
+        //基本信息管理
+        route::get('essential_information','InformationController@index');
+
         //用户管理
         route::get('users','UserController@index');
         route::get('users/getData','UserController@getData');

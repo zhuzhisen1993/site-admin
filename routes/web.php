@@ -46,7 +46,16 @@ Route::any('laravel-u-editor-server/server',function(){
 
 });
 
-Route::any('{all}', function () {
-    return view('layouts/index');
-})->where(['all'=>'.*']);
+Route::group(['namespace' => 'Web'], function () {
+        Route::get('/', 'IndexController@index'); //后台首页
+});
+
+
+
+
+
+
+//Route::any('{all}', function () {
+//    return view('layouts/index');
+//})->where(['all'=>'.*']);
 

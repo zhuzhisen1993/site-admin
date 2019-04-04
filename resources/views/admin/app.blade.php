@@ -161,6 +161,11 @@
                         <i class="fa fa-dashboard"></i> <span>控制面板</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{url('/admin/essential_information')}}">
+                        <i class="fa fa-dashboard"></i> <span>基本信息管理</span>
+                    </a>
+                </li>
 
                 <li class="treeview @if($nav_active == 'User') active @endif">
                     <a href="#">

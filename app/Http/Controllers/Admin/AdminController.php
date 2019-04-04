@@ -11,6 +11,7 @@ class AdminController extends Controller
      * @var AdminRepository
      */
     public $admin;
+    protected $nav_active;
 
     /**
      * AdminController constructor.
@@ -18,6 +19,7 @@ class AdminController extends Controller
      */
     public function __construct(AdminRepository $admin)
     {
+        $this->nav_active = 'Article';
         $this->admin = $admin;
     }
 
@@ -42,6 +44,7 @@ class AdminController extends Controller
      */
     public function adminInfo()
     {
-        return view('admin.users.admin');
+        $data['nav_active'] = $this->nav_active;
+        return view('admin.users.admin',$data);
     }
 }
